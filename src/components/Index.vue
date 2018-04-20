@@ -3,7 +3,7 @@
         title: 'Home',
         showMenuButton: true,
         menuButtonText: '<i class=\'icon ion-navicon\'></i>',
-        onMenuButtonClick: test2}">
+        onMenuButtonClick: userInfo}">
         <div class="page-content text-center">
             <div class="padding">
                 <cells class="cells-44" :items="getItems(16)" :on-cell-click="onCellClick" row="4" col="4"></cells>
@@ -53,7 +53,15 @@
                 for (let i = 0; i < n; i++) {
                     items.push(this.getIcon(this.icons[i]))
                 }
+
+                this.ax.get('/port/pay/login')
+                    .then(function(response) {
+                        console.log(response)
+                    });
                 return items
+            },
+            userInfo() {
+
             }
         }
     }

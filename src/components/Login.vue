@@ -2,12 +2,10 @@
     <div class="page has-navbar" v-nav="{
         title: 'Home',
         showBackButton: true,
-        onBackButtonClick: $router.back({path:'/'}),
-        showMenuButton: true,
-        menuButtonText: '<i class=\'icon ion-navicon\'></i>',
-        onMenuButtonClick: changeSource}">
+        onBackButtonClick: $router.back({path:'/'})>
         <div class="page-content text-center">
             <div class="padding">
+                登录
             </div>
         </div>
     </div>
@@ -16,9 +14,6 @@
     export default {
 
         method: {
-            changeSource: function() {
-
-            }
         }
     }
 </script>
