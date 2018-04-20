@@ -37,6 +37,7 @@
         methods: {
             onCellClick(cellIndex) {
                 console.log('cell ' + cellIndex + ' clicked');
+                $router.
             },
 
             getIcon(iconName, color) {
