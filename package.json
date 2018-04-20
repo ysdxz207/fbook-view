@@ -1,10 +1,10 @@
 {
-  "name": "vonic-template",
-  "version": "2.0.0",
-  "description": "Webpack Template for Vonic 2.",
-  "author": "wangdahoo <157195705@qq.com>",
+  "name": "fbook-view",
+  "version": "1.0.0",
+  "description": "fbook view",
+  "author": "ysdxz207 <ysdxz207@qq.com>",
   "scripts": {
-    "dev": "webpack-dev-server --inline --hot --port=8081",
+    "dev": "webpack-dev-server --inline --hot --port=1234",
     "build": "cross-env NODE_ENV=production webpack --progress --hide-modules"
   },
   "dependencies": {
