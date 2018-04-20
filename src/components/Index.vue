@@ -1,5 +1,9 @@
 <template>
-    <div class="page has-navbar" v-nav="{ title: 'Home' }">
+    <div class="page has-navbar" v-nav="{
+        title: 'Home',
+        showMenuButton: true,
+        menuButtonText: '<i class=\'icon ion-navicon\'></i>',
+        onMenuButtonClick: test2}">
         <div class="page-content text-center">
             <div class="padding">
                 <cells class="cells-44" :items="getItems(16)" :on-cell-click="onCellClick" row="4" col="4"></cells>
@@ -36,8 +40,8 @@
         },
         methods: {
             onCellClick(cellIndex) {
-                console.log('cell ' + cellIndex + ' clicked');
-                $router.
+//                console.log('cell ' + cellIndex + ' clicked');
+                $router.forward({ path: '/haha' })
             },
 
             getIcon(iconName, color) {
