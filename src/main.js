@@ -2,29 +2,52 @@ import Vue from 'vue'
 import Vonic from 'vonic/src/index.js'
 import axios from 'axios'
 
-// Page Components
-import Index from './components/Index.vue'
-import About from './components/About.vue'
-import Book from './components/Book.vue'
-import Book from './components/Login.vue'
+
+const Index = () => import('./components/Index.vue');
+const Login = () => import('./components/Login.vue');
+const About = () => import('./components/About.vue');
+const Book = () => import('./components/Book.vue');
+const Source = () => import('./components/Source.vue');
 
 // Routes
 const routes = [
-    {path: '/', component: Index},
-    {path: '/about', component: About},
-    {path: '/book', component: Book},
-    {path: '/login', component: Login}
+    {
+        path: '/',
+        name: Index,
+        component: Index
+    },
+    {
+        path: '/login',
+        name: Login,
+        component:Login
+    },
+    {
+        path: '/about',
+        name: About,
+        component: About
+    },
+    {
+        path: '/book',
+        name: Book,
+        component: Book
+    },
+    {
+        path: '/source',
+        name: Source,
+        component: Source
+    }
 ]
 
 // axios
-const ax = axios.create({
-    baseURL: 'http://dev-gateway.lamic.cn',
+const ajax = axios.create({
+    baseURL: '/',
     timeout: 1000,
-    headers: {'X-Custom-Header': 'foobar'}
+    headers: {}
 });
 
-Vue.prototype.ax = ax;
+Vue.prototype.ajax = ajax;
+
 
 Vue.use(Vonic.app, {
     routes: routes
-})
+});

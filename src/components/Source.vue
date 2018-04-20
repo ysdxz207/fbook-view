@@ -1,12 +1,7 @@
 <template>
     <div class="page has-navbar" v-nav="{
-        title: '书籍详情',
-        showBackButton: true,
-        showMenuButton: true,
-        menuButtonText: '<i class=\'icon ion-gear-b\'></i>',
-        onMenuButtonClick: function() {
-            $router.forward({path:'/source'})
-        }
+        title: '切换书源',
+        showBackButton: true
         }">
         <div class="page-content text-center">
             <div class="padding">
