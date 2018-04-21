@@ -1,19 +1,18 @@
 import Vue from 'vue'
-import VueRouter from 'vue-router'
 import Vonic from 'vonic/src/index.js'
 import axios from 'axios'
 
 
 const Index = () => import('./components/Index.vue');
 const Login = () => import('./components/Login.vue');
+const Register = () => import('./components/Register.vue');
 const About = () => import('./components/About.vue');
 const Book = () => import('./components/Book.vue');
 const Source = () => import('./components/Source.vue');
 
 // Routes
 
-const router = new VueRouter({
-    routes: [
+const routes = [
         {
             path: '/',
             name: Index,
@@ -26,6 +25,11 @@ const router = new VueRouter({
             path: '/login',
             name: Login,
             component:Login
+        },
+        {
+            path: '/register',
+            name: Register,
+            component:Register
         },
         {
             path: '/about',
@@ -48,18 +52,47 @@ const router = new VueRouter({
                 requireAuth: true
             }
         }
-    ]
+    ];
+
+Vue.use(Vonic.app, {
+    routes: routes
 });
 
 // axios
 const ajax = axios.create({
-    baseURL: 'http://localhost:8010',
-    timeout: 1000,
-    headers: {'Content-Type': 'application/json'}
+    baseURL: 'http://192.168.3.2:8010',
+    timeout: 20000,
+    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+    params: {},
+    transformRequest: [function (data) {
+        let ret = ''
+        for (let it in data) {
+            ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
+        }
+        return ret
+    }]
 });
 
 Vue.prototype.ajax = ajax;
 
+
+$router.beforeEach((to, from, next) => {
+    if (to.matched.some(res => res.meta.requireAuth)) {// 判断是否需要登录权限
+
+        if (localStorage.getItem('username')) {// 判断是否登录
+            next()
+        } else {
+    console.log('=================', to)
+            // 没登录则跳转到登录界面
+            next({
+                path: '/login',
+                query: {redirect: to.fullPath}
+            })
+        }
+    } else {
+        next()
+    }
+});
 
 // http request 拦截器
 ajax.interceptors.request.use(
@@ -72,45 +105,29 @@ ajax.interceptors.request.use(
 
 // http response 拦截器
 ajax.interceptors.response.use(
+
     response => {
+        if (response.data.statusCode == 401) {
+            $router.forward({
+                path: '/login',
+                query: {redirect: $router.currentRoute.fullPath}
+            })
+        }
         return response;
     },
     error => {
+        console.log(error.response)
         if (error.response) {
             switch (error.response.status) {
                 case 401:
-                    // 返回 401 清除token信息并跳转到登录页面
-                    router.replace({
+                    $router.forward({
                         path: '/login',
-                        query: {redirect: router.currentRoute.fullPath}
+                        query: {redirect: $router.currentRoute.fullPath}
                     })
             }
         }
-        return Promise.reject(error.response.data)   // 返回接口返回的错误信息
+        return Promise.reject(error.response)
     });
 
 
-router.beforeEach((to, from, next) => {
-        console.log('=================')
-    if (to.matched.some(res => res.meta.requireAuth)) {// 判断是否需要登录权限
 
-        if (localStorage.getItem('username')) {// 判断是否登录
-            next()
-        } else {// 没登录则跳转到登录界面
-            next({
-                path: '/login',
-                query: {redirect: to.fullPath}
-            })
-        }
-    } else {
-        next()
-    }
-});
-
-
-
-
-Vue.use(Vonic.app, {
-    router,
-    defaultRouteUrl: '/'
-});

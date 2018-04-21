@@ -56,7 +56,7 @@
 
                 this.ajax({
                     method: 'post',
-                    url: '/user/12345',
+                    url: '/',
                     data: {
                         firstName: 'Fred',
                         lastName: 'Flintstone'

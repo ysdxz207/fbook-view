@@ -7050,7 +7050,7 @@ webpack-analyse@^0.0.1:
     url-loader "^0.5.6"
     webpack "^1.12.6"
 
-webpack-cli@^2.0.15:
+webpack-cli@^2.0.14:
   version "2.0.15"
   resolved "http://registry.npm.taobao.org/webpack-cli/download/webpack-cli-2.0.15.tgz#7532066556b03bd3292285ac08537e28844616c2"
   dependencies:
