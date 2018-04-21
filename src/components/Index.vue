@@ -54,14 +54,14 @@
                     items.push(this.getIcon(this.icons[i]))
                 }
 
-//                this.ajax({
-//                    method: 'post',
-//                    url: '/user/12345',
-//                    data: {
-//                        firstName: 'Fred',
-//                        lastName: 'Flintstone'
-//                    }
-//                });
+                this.ajax({
+                    method: 'post',
+                    url: '/user/12345',
+                    data: {
+                        firstName: 'Fred',
+                        lastName: 'Flintstone'
+                    }
+                });
                 return items
             },
             userInfo() {

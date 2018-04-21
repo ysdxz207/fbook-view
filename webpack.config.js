@@ -3,12 +3,15 @@ var webpack = require('webpack')
 
 module.exports = {
   entry: './src/main.js',
-  output: {
+    output: {
     path: path.resolve(__dirname, './dist'),
     publicPath: '/dist/',
     filename: 'build.js'
   },
-  module: {
+  externals: {
+    '': ''
+  },
+    module: {
     rules: [
       {
         test: /\.vue$/,
@@ -46,7 +49,7 @@ module.exports = {
   },
   devServer: {
     historyApiFallback: true,
-    noInfo: true
+    noInfo: false
   },
   devtool: '#eval-source-map'
 }
