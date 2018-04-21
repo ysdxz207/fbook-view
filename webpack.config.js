@@ -8,9 +8,6 @@ module.exports = {
     publicPath: '/dist/',
     filename: 'build.js'
   },
-  externals: {
-    '': ''
-  },
     module: {
     rules: [
       {
