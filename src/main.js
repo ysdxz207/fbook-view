@@ -70,7 +70,8 @@ const ajax = axios.create({
             ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
         }
         return ret
-    }]
+    }],
+    withCredentials: true//解决跨域session不一致问题
 });
 
 Vue.prototype.ajax = ajax;
@@ -82,7 +83,6 @@ $router.beforeEach((to, from, next) => {
         if (localStorage.getItem('username')) {// 判断是否登录
             next()
         } else {
-    console.log('=================', to)
             // 没登录则跳转到登录界面
             next({
                 path: '/login',
