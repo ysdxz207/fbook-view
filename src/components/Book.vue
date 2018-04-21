@@ -10,13 +10,18 @@
         }">
         <div class="page-content text-center">
             <div class="padding">
+                <h1 v-text="bookId"></h1>
             </div>
         </div>
     </div>
 </template>
 <script>
     export default {
-
+        data() {
+            return {
+                bookId: $router.params.bookId
+            }
+        },
         methods: {
 
         }

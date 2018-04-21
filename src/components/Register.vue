@@ -42,13 +42,13 @@
                         switch (response.data.statusCode) {
                             case 200:
                                 $router.forward({path: '/'})
-                                return
+                                break;
                             default:
                                 $toast.show(response.data.message)
                         }
                     }).catch(function (error) {
                     $dialog.alert({
-                        content: '服务器异常:' + error,
+                        content: '服务器异常:' + JSON.stringify(error),
                         okTheme: 'calm'
                     })
                 });

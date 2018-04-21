@@ -6,6 +6,7 @@ import axios from 'axios'
 const Index = () => import('./components/Index.vue');
 const Login = () => import('./components/Login.vue');
 const Register = () => import('./components/Register.vue');
+const User = () => import('./components/User.vue');
 const About = () => import('./components/About.vue');
 const Book = () => import('./components/Book.vue');
 const Source = () => import('./components/Source.vue');
@@ -30,6 +31,14 @@ const routes = [
             path: '/register',
             name: Register,
             component:Register
+        },
+        {
+            path: '/user',
+            name: User,
+            component:User,
+            meta: {
+                requireAuth: true
+            }
         },
         {
             path: '/about',
@@ -80,9 +89,10 @@ Vue.prototype.ajax = ajax;
 $router.beforeEach((to, from, next) => {
     if (to.matched.some(res => res.meta.requireAuth)) {// 判断是否需要登录权限
 
-        if (localStorage.getItem('username')) {// 判断是否登录
+        if (localStorage.getItem('fbook_username')) {// 判断是否登录
             next()
         } else {
+            console.log('未登录')
             // 没登录则跳转到登录界面
             next({
                 path: '/login',
@@ -108,6 +118,7 @@ ajax.interceptors.response.use(
 
     response => {
         if (response.data.statusCode == 401) {
+            localStorage.removeItem('fbook_username');
             $router.forward({
                 path: '/login',
                 query: {redirect: $router.currentRoute.fullPath}
@@ -116,7 +127,6 @@ ajax.interceptors.response.use(
         return response;
     },
     error => {
-        console.log(error.response)
         if (error.response) {
             switch (error.response.status) {
                 case 401:

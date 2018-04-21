@@ -47,10 +47,12 @@
                     .then(function (response) {
                         switch (response.data.statusCode) {
                             case 200:
-                                $router.back(-1)
-                                return
+                                localStorage.setItem('fbook_username', response.data.data.loginname)
+                                localStorage.setItem('fbook_nickname', response.data.data.nickname)
+                                $router.forward({path: '/'})
+                                break;
                             case 300:
-
+                                _this.user.captcha = '';
                                 if ("LOGIN_WRONG_CAPTCHA" == response.data.errorCode) {
                                     //刷新验证码
                                     _this.refreshCaptcha();
@@ -60,7 +62,7 @@
                         }
                     }).catch(function (error) {
                     $dialog.alert({
-                        content: '服务器异常:' + error,
+                        content: '服务器异常:' + JSON.stringify(error),
                         okTheme: 'calm'
                     })
                 });

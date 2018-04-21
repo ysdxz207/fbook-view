@@ -2,82 +2,77 @@
     <div class="page has-navbar" v-nav="{
         title: '我的书架',
         showMenuButton: true,
-        menuButtonText: '<i class=\'icon ion-navicon\'></i>',
+        menuButtonText: '<i class=\'icon ion-person\'></i>',
         onMenuButtonClick: userInfo}">
         <div class="page-content text-center">
             <div class="padding">
-                <cells class="cells-books" :items="getItems(16)" :on-cell-click="onCellClick" row="4" col="4"></cells>
+                <router-link :to="{path:'/book',params: {bookId:' + bookId + '}}" class="cells-books" v-for="book in books">
+                    <img :src="book.faceUrl" class="book-img"/>
+                    <div class="book-title">{{book.name}}</div>
+                </router-link>
             </div>
         </div>
     </div>
 </template>
 <script>
     export default {
+        mounted() {
+            this.loadBooks();
+        },
         data() {
             return {
-                icons: [
-                    'ion-android-arrow-up',
-                    'ion-android-arrow-down',
-                    'ion-android-arrow-back',
-                    'ion-android-arrow-forward',
-
-                    'ion-ios-arrow-up',
-                    'ion-ios-arrow-down',
-                    'ion-ios-arrow-left',
-                    'ion-ios-arrow-right',
-
-                    'ion-ios-arrow-thin-up',
-                    'ion-ios-arrow-thin-down',
-                    'ion-ios-arrow-thin-left',
-                    'ion-ios-arrow-thin-right',
-
-                    'ion-android-arrow-up',
-                    'ion-android-arrow-down',
-                    'ion-android-arrow-back',
-                    'ion-android-arrow-forward'
-                ]
+                books: []
             }
         },
         methods: {
-            onCellClick(cellIndex) {
-//                console.log('cell ' + cellIndex + ' clicked');
-                $router.forward({ path: '/book' })
-            },
+            loadBooks() {
+                let _this = this;
+                $loading.show('读取书架信息...');
 
-            getIcon(iconName, color) {
-                return '<i class="' + iconName + '"></i>'
-            },
-
-            getItems(n) {
-                let items = []
-                for (let i = 0; i < n; i++) {
-                    items.push(this.getIcon(this.icons[i]))
-                }
-
-                this.ajax({
-                    method: 'post',
-                    url: '/',
-                    data: {
-                        firstName: 'Fred',
-                        lastName: 'Flintstone'
-                    }
+                _this.ajax.post('/', this.user)
+                    .then(function (response) {
+                        switch (response.data.statusCode) {
+                            case 200:
+                                $loading.hide();
+                                _this.books = response.data.list;
+                                break;
+                            default:
+                                $toast.show(response.data.message)
+                        }
+                    }).catch(function (error) {
+                    $dialog.alert({
+                        content: '服务器异常:' + JSON.stringify(error ),
+                        okTheme: 'calm'
+                    })
                 });
-                return items
+                return [];
             },
             userInfo() {
-
+                $router.forward({path: '/user'})
             }
         }
     }
 </script>
 <style lang="scss">
+
     .page.has-navbar .page-content {
         padding-top: 38px;
     }
 
-    .cells.cells-books> .row > .col {
-        height: 98px;
-        padding: 10px 0;
-        border: 4px solid #f5f5f5;
+    .cells-books {
+        font-size: 12px;
+        width: 30%;
+        height: 110px;
+        padding-top: 8px;
+        float: left;
+        text-decoration: none;
+        color: #525252;
+    }
+    .cells-books .book-img {
+        height: 86px;
+    }
+    .cells-books .book-title {
+        position: relative;
+        bottom: 6px;
     }
 </style>
