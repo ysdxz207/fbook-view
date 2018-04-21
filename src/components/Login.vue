@@ -1,14 +1,22 @@
 <template>
     <div class="page" v-nav="{title: '登录'}">
         <div class="page-content padding-top">
-            <form @submit.prevent="login">
+            <form>
                 <title>登录</title>
                 <von-input type="text" v-model="user.uname" placeholder="用户名" label="用户名"></von-input>
                 <von-input type="password" v-model="user.upass" placeholder="密码" label="密码" style="margin-bottom: 5px;"></von-input>
-                <von-input type="text" v-model="user.captcha" placeholder="验证码" label="验证码"></von-input>
+                <div class="row">
+                    <von-input type="text"
+                               v-model="user.captcha"
+                               placeholder="验证码"
+                               label="验证码"
+                               class="col col-60"></von-input>
+
+                    <img :src="captchaImg" class="col col-30" @click="refreshCaptcha()">
+                </div>
 
                 <div class="padding">
-                    <button class="button button-calm button-block" type="submit">登录</button>
+                    <md-button class="button button-calm button-block" @click.native="login()">登录</md-button>
                 </div>
                 <label class="padding-left pull-right">没有帐号?</label>
                 <router-link to="/register">
@@ -28,17 +36,27 @@
                     uname: '',
                     upass: '',
                     captcha: ''
-                }
+                },
+                captchaImg: this.ajax.defaults.baseURL + '/captcha.jpg'
             }
         },
         methods: {
             login() {
-                this.ajax.post('/login', this.user)
+                let _this = this;
+                _this.ajax.post('/login', this.user)
                     .then(function (response) {
-                        if (response.data.statusCode == 200) {
-                            $router.back(-1)
-                        } else {
-                            $toast.show(response.data.message)
+                        switch (response.data.statusCode) {
+                            case 200:
+                                $router.back(-1)
+                                return
+                            case 300:
+
+                                if ("LOGIN_WRONG_CAPTCHA" == response.data.errorCode) {
+                                    //刷新验证码
+                                    _this.refreshCaptcha();
+                                }
+                            default:
+                                $toast.show(response.data.message)
                         }
                     }).catch(function (error) {
                     $dialog.alert({
@@ -46,6 +64,9 @@
                         okTheme: 'calm'
                     })
                 });
+            },
+            refreshCaptcha() {
+                this.captchaImg = this.ajax.defaults.baseURL + '/captcha.jpg?' + new Date().getTime();
             }
         }
     }
