@@ -76,9 +76,16 @@ Vue.use(Vonic.app, {
     routes: routes
 });
 
+
+const env = process.env.NODE_ENV;
+
+const baseURL = env == 'production' ? 'http://localhost:8010' : 'http://192.168.3.2:8010';
+
+
+
 // axios
 const ajax = axios.create({
-    baseURL: 'http://192.168.3.2:8010',
+    baseURL: baseURL,
     timeout: 20000,
     headers: {'Content-Type': 'application/x-www-form-urlencoded'},
     params: {},
