@@ -7,6 +7,7 @@ const Index = () => import('./components/Index.vue');
 const Login = () => import('./components/Login.vue');
 const Register = () => import('./components/Register.vue');
 const User = () => import('./components/User.vue');
+const Search = () => import('./components/Search.vue');
 const About = () => import('./components/About.vue');
 const Book = () => import('./components/Book.vue');
 const Source = () => import('./components/Source.vue');
@@ -36,6 +37,14 @@ const routes = [
             path: '/user',
             name: User,
             component:User,
+            meta: {
+                requireAuth: true
+            }
+        },
+        {
+            path: '/search',
+            name: Search,
+            component:Search,
             meta: {
                 requireAuth: true
             }

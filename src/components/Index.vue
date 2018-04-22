@@ -13,7 +13,7 @@
             </div>
 
             <div class="btn-add-book-group">
-                <md-button @lick.native="goSearch()" class="button button-energized button-fab btn-add-book">
+                <md-button @click.native="goSearch()" class="button button-energized button-fab btn-add-book">
                     <i class="icon ion-plus-round"></i>
                 </md-button>
             </div>
@@ -56,6 +56,9 @@
             },
             userInfo() {
                 $router.forward({path: '/user'})
+            },
+            goSearch() {
+                $router.forward({path: '/search'})
             }
         }
     }
