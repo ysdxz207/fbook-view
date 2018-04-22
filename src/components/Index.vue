@@ -5,11 +5,17 @@
         menuButtonText: '<i class=\'icon ion-person\'></i>',
         onMenuButtonClick: userInfo}">
         <div class="page-content text-center">
-            <div class="padding">
-                <router-link :to="{path:'/book',params: {bookId:' + bookId + '}}" class="cells-books" v-for="book in books">
+            <div class="padding" v-for="book in books">
+                <router-link :to="{path:'/book',query: {bookId: book.id, aId: book.aId}}" class="cells-books">
                     <img :src="book.faceUrl" class="book-img"/>
                     <div class="book-title">{{book.name}}</div>
                 </router-link>
+            </div>
+
+            <div class="btn-add-book-group">
+                <md-button @lick.native="goSearch()" class="button button-energized button-fab btn-add-book">
+                    <i class="icon ion-plus-round"></i>
+                </md-button>
             </div>
         </div>
     </div>
@@ -40,10 +46,11 @@
                                 $toast.show(response.data.message)
                         }
                     }).catch(function (error) {
-                    $dialog.alert({
-                        content: '服务器异常:' + JSON.stringify(error ),
-                        okTheme: 'calm'
-                    })
+                        $loading.hide();
+                        $dialog.alert({
+                            content: '服务器异常:' + JSON.stringify(error ),
+                            okTheme: 'calm'
+                        })
                 });
                 return [];
             },
@@ -74,5 +81,14 @@
     .cells-books .book-title {
         position: relative;
         bottom: 6px;
+    }
+    .btn-add-book-group {
+        position: fixed;
+        bottom: 50px;
+        text-align: center;
+        width: 100%;
+    }
+    .btn-add-book {
+        margin: 0 auto;
     }
 </style>
