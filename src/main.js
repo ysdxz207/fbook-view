@@ -79,7 +79,7 @@ Vue.use(Vonic.app, {
 
 const env = process.env.NODE_ENV;
 
-const baseURL = env == 'production' ? 'http://localhost:8010' : 'http://192.168.3.2:8010';
+const baseURL = env == 'production' ? 'http://localhost:8010' : 'http://localhost:8010';
 
 
 
@@ -87,7 +87,10 @@ const baseURL = env == 'production' ? 'http://localhost:8010' : 'http://192.168.
 const ajax = axios.create({
     baseURL: baseURL,
     timeout: 20000,
-    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+    headers: {
+        "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
+        'Accept': 'application/json'
+    },
     params: {},
     transformRequest: [function (data) {
         let ret = ''
