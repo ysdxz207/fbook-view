@@ -2,7 +2,7 @@
   <div class="page has-navbar" v-nav="{ title: '用户信息', showBackButton: true }">
     <div class="page-content text-center padding">
       <div v-text="user.nickname" class="padding"></div>
-      <md-button @click.native="logout()" class="button button-assertive button-block btn-logout">退出登录</md-button>
+        <md-button @click.native="logout()" class="button button-assertive button-block btn-logout">退出登录</md-button>
     </div>
   </div>
 </template>
@@ -63,5 +63,6 @@
     width: 100%;
     position: fixed;
     bottom: 0px;
+    left: 0px;
   }
 </style>

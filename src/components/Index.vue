@@ -35,7 +35,7 @@
                 let _this = this;
                 $loading.show('读取书架信息...');
 
-                _this.ajax.post('/')
+                _this.ajax.get('/')
                     .then(function (response) {
                         switch (response.data.statusCode) {
                             case 200:
