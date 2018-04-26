@@ -59,7 +59,7 @@
 </script>
 <style lang="scss">
 
-  .btn-logout {
+  .button.btn-logout {
     width: 100%;
     position: fixed;
     bottom: 0px;

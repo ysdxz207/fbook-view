@@ -35,7 +35,8 @@
                     </md-button>
                 </div>
                 <div class="col col-50">
-                    <md-button class="button button-dark button-smal">
+                    <md-button class="button button-dark button-smal"
+                               @click.native="startRead()">
                         <i class="icon ion-ios-book-outline"></i>
                         开始阅读
                     </md-button>
@@ -52,7 +53,8 @@
 <script>
     export default {
         mounted() {
-            this.loadBookDetail()
+            this.loadBookDetail();
+            console.log(this.$route.query.bookId)
         },
         data() {
             return {
@@ -70,7 +72,7 @@
                 let _this = this;
                 $loading.show('读取书籍信息...');
 
-                _this.ajax.post('/detail', {bookId: this.book, aId: this.book.aId})
+                _this.ajax.post('/detail', {bookId: this.book.bookId, aId: this.book.aId})
                     .then(function (response) {
                         switch (response.data.statusCode) {
                             case 200:
@@ -108,6 +110,12 @@
                         okTheme: 'calm'
                     })
                 });
+            },
+            startRead() {
+                console.log(this.$route.query.bookId)
+                $router.forward({path: '/read', query: {
+                    bookId: this.$route.query.bookId
+                }});
             }
         }
     }

@@ -5,9 +5,10 @@ const Login = () => import('./components/Login.vue');
 const Register = () => import('./components/Register.vue');
 const User = () => import('./components/User.vue');
 const Search = () => import('./components/Search.vue');
-const About = () => import('./components/About.vue');
 const Book = () => import('./components/Book.vue');
+const Read = () => import('./components/Read.vue');
 const Source = () => import('./components/Source.vue');
+const About = () => import('./components/About.vue');
 
 // Routes
 
@@ -47,14 +48,17 @@ const routes = [
             }
         },
         {
-            path: '/about',
-            name: About,
-            component: About
-        },
-        {
             path: '/book',
             name: Book,
             component: Book,
+            meta: {
+                requireAuth: true
+            }
+        },
+        {
+            path: '/read',
+            name: Read,
+            component: Read,
             meta: {
                 requireAuth: true
             }
@@ -66,6 +70,11 @@ const routes = [
             meta: {
                 requireAuth: true
             }
+        },
+        {
+            path: '/about',
+            name: About,
+            component: About
         }
     ];
 

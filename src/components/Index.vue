@@ -5,7 +5,7 @@
         menuButtonText: '<i class=\'icon ion-person\'></i>',
         onMenuButtonClick: userInfo}">
         <div class="page-content text-center">
-            <div class="padding" v-for="book in books">
+            <div v-for="book in books">
                 <router-link :to="{path:'/book',query: {bookId: book.id, aId: book.aId}}" class="cells-books">
                     <img :src="book.faceUrl" class="book-img"/>
                     <div class="book-title">{{book.name}}</div>
