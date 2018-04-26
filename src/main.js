@@ -1,6 +1,3 @@
-import Vue from 'vue'
-import Vonic from 'vonic/src/index.js'
-import axios from 'axios'
 
 
 const Index = () => import('./components/Index.vue');
@@ -71,6 +68,7 @@ const routes = [
             }
         }
     ];
+
 
 Vue.use(Vonic.app, {
     routes: routes

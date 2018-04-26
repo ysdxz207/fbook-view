@@ -49,7 +49,14 @@ module.exports = {
     historyApiFallback: true,
     noInfo: false
   },
-  devtool: '#eval-source-map'
+  devtool: '#eval-source-map',
+    externals: {
+        'vue':'Vue',
+        'vue-router':'VueRouter',
+        'axios': 'axios',
+        'vonic': 'vonic'
+
+    }
 }
 
 if (process.env.NODE_ENV === 'production') {
