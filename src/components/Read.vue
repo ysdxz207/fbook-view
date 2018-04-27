@@ -11,7 +11,7 @@
     export default {
 
         mounted() {
-//            this.chapter();
+            this.chapter();
         },
         data() {
             return {
