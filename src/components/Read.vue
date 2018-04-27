@@ -1,7 +1,7 @@
 <template>
   <div class="page">
     <div v-text="book.bookId"></div>
-    <div class="page-content text-center" v-text="book.content">
+    <div class="page-content text-center" v-html="chapter.content">
 
     </div>
   </div>
@@ -11,7 +11,7 @@
     export default {
 
         mounted() {
-            this.chapter();
+            this.loadChapter();
         },
         data() {
             return {
@@ -22,24 +22,32 @@
                     content: '',
                     bookInfo: {
                     }
-                }
+                },
+                chapter: {}
             }
         },
         methods: {
-            chapter() {
+            loadChapter() {
                 let _this = this;
-                _this.ajax.post('/chapter', this.book)
-                    .then(function (response) {
-                        switch (response.data.statusCode) {
-                            case 200:
-                                this.book = response.data.book
-                                break;
-                            case 300:
 
-                            default:
-                                $toast.show(response.data.message)
-                        }
-                    }).catch(function (error) {
+                _this.ajax({
+                    method: 'post',
+                    url: '/chapter',
+                    data: {
+                        bookId: _this.book.bookId
+                    }
+
+                }).then(function (response) {
+                    switch (response.data.statusCode) {
+                        case 200:
+                            _this.chapter = response.data.data.chapter
+                            break;
+                        case 300:
+
+                        default:
+                            $toast.show(response.data.message)
+                    }
+                }).catch(function (error) {
                     $dialog.alert({
                         content: '服务器异常:' + JSON.stringify(error),
                         okTheme: 'calm'
