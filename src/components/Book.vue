@@ -54,7 +54,6 @@
     export default {
         mounted() {
             this.loadBookDetail();
-            console.log(this.$route.query.bookId)
         },
         data() {
             return {
@@ -112,7 +111,6 @@
                 });
             },
             startRead() {
-                console.log(this.$route.query.bookId)
                 $router.forward({path: '/read', query: {
                     bookId: this.$route.query.bookId
                 }});
