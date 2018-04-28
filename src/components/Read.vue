@@ -6,16 +6,22 @@
             <div class="text-center read-content"
                  v-bind:style="readConfig.readContentStyle"
                  v-html="data.chapter.content"
-                @click="showMenu()">
+                @click="toggleMenu()">
 
             </div>
         </div>
-        <menu ref="menu" v-show="menus.showMenu"></menu>
+        <v-menu v-show="menus.menuMain" :menu-option="menuOption" ref="menu"></v-menu>
+
     </div>
 </template>
 
 <script>
+    import menu from './menus/Menu.vue';
+
     export default {
+        components: {
+            'v-menu': menu
+        },
         mounted() {
             this.loadChapter();
 
@@ -50,7 +56,7 @@
                     }
                 },
                 menus: {
-                    showMenu: true
+                    menuMain: false
                 }
             }
         },
@@ -72,7 +78,7 @@
                     switch (response.data.statusCode) {
                         case 200:
                             let data = response.data.data;
-//                            _this.data = data;
+                            _this.data = data;
                             break;
                         case 300:
 
@@ -92,8 +98,9 @@
             refreshConfig() {
 
             },
-            showMenu() {
-                this.menus.showMenu = true;
+            toggleMenu() {
+                console.log('toggle menu');
+                this.menus.menuMain = !this.menus.menuMain;
             }
         }
     }

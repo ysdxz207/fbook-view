@@ -1,8 +1,7 @@
 <template>
-  <section>
-    <v-menu v-show="showMenu" :menu-option="menuOption" ref="menu"></v-menu>
+  <section @click="toggleMenu()">
+    <v-menu v-show="menus.menuMain" :menu-option="menuOption" ref="menu"></v-menu>
 
-    <button @click="show()">显示</button>
   </section>
 </template>
 
@@ -14,22 +13,19 @@
             'v-menu': menu
         },
         mounted() {
-
+            this.toggleMenu()
         },
         data() {
             return {
-                showMenu: false,
-                menuOption: {
-                    title: '哈哈',
-                    text: '爱爱爱',
-                    cancelButtonText: 'no',
-                    confirmButtonText: 'yes'
+                menus: {
+                    menuMain: false
                 }
             }
         },
         methods: {
-            show() {
-                this.showMenu = true;
+            toggleMenu() {
+                console.log('toggle menu');
+                this.menus.menuMain = !this.menus.menuMain;
             }
         }
     }
