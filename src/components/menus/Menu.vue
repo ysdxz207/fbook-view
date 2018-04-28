@@ -1,19 +1,7 @@
 <template>
-  <transition name='fade'>
-    <div class="menu-f" v-if="show">
-      <div class="">
-        <slot>
-        {{title}}
-        </slot>
-      </div>
-      <div class="">
-
-      </div>
-      <div class="">
-
-      </div>
+    <div class="menu-f">
+      <div>哈哈哈</div>
     </div>
-  </transition>
 </template>
 <script>
     export default {
@@ -25,16 +13,19 @@
             },
             message: {
                 type: String,
+            },
+            props: {
+                menuOption: Object
             }
         },
         data() {
             return {
-                show: false
+                isShowMenu: true
             }
         },
         methods: {
             show() {
-              this.show = true;
+              this.isShowMenu = true;
             }
         }
     }
@@ -43,5 +34,7 @@
 <style scoped lang='scss'>
 .menu-f {
   border: 1px solid red;
+  width: 400px;
+  height: 400px;
 }
 </style>

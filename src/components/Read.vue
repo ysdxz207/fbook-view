@@ -10,8 +10,8 @@
 
             </div>
         </div>
+        <menu ref="menu" v-show="menus.showMenu"></menu>
     </div>
-    <menu ref="menu"></menu>
 </template>
 
 <script>
@@ -50,7 +50,7 @@
                     }
                 },
                 menus: {
-                    popup: undefined
+                    showMenu: true
                 }
             }
         },
@@ -72,7 +72,7 @@
                     switch (response.data.statusCode) {
                         case 200:
                             let data = response.data.data;
-                            _this.data = data;
+//                            _this.data = data;
                             break;
                         case 300:
 
@@ -93,7 +93,7 @@
 
             },
             showMenu() {
-                Menu.show();
+                this.menus.showMenu = true;
             }
         }
     }

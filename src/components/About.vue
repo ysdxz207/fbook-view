@@ -1,7 +1,39 @@
 <template>
-  <div class="page has-navbar" v-nav="{ title: 'About', showBackButton: true }">
-    <div class="page-content text-center">
-      <h2 class="padding">Nothing here.</h2>
-    </div>
-  </div>
+  <section>
+    <v-menu v-show="showMenu" :menu-option="menuOption" ref="menu"></v-menu>
+
+    <button @click="show()">显示</button>
+  </section>
 </template>
+
+<script>
+
+    import menu from './menus/Menu.vue';
+    export default {
+        components: {
+            'v-menu': menu
+        },
+        mounted() {
+
+        },
+        data() {
+            return {
+                showMenu: false,
+                menuOption: {
+                    title: '哈哈',
+                    text: '爱爱爱',
+                    cancelButtonText: 'no',
+                    confirmButtonText: 'yes'
+                }
+            }
+        },
+        methods: {
+            show() {
+                this.showMenu = true;
+            }
+        }
+    }
+</script>
+<style lang="scss">
+
+</style>
