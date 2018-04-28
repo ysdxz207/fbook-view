@@ -1,7 +1,7 @@
 <template>
     <transition name="fade">
         <div class="menu-f" >
-            <div class="menu-header">header</div>
+            <div class="menu-header">{{modal.transition}}</div>
             <div class="menu-footer">footer</div>
         </div>
     </transition>
@@ -10,15 +10,14 @@
     export default {
         name: 'menu',
         props: {
-            title: {
-                type: String,
-                default: '提示',
-            },
-            message: {
-                type: String,
-            },
-            props: {
-                menuOption: Object
+            menuOption: Object
+        },
+        computed: {
+            modal: function() {
+                let options = this.menuOption;
+                return {
+                    transition: options.transition || 'fade'
+                }
             }
         },
         data() {
@@ -31,7 +30,6 @@
                 this.isShowMenu = true;
             },
             hide() {
-                console.log('hide')
                 this.isShowMenu = false;
             }
         }
@@ -69,8 +67,6 @@
         z-index: 0;
         background-color: #444;
     }
-
-
 
 
     .fade-enter-active, .fade-leave-active {
