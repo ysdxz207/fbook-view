@@ -3,7 +3,7 @@
         title: '书籍详情',
         showBackButton: true,
         showMenuButton: true,
-        menuButtonText: '<i class=\'icon ion-gear-b\'></i>',
+        menuButtonText: '<i class=\'icon ion-ios-gear\'></i>',
         onMenuButtonClick: function() {
             $router.forward({path:'/source'})
         }

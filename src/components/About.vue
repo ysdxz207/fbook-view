@@ -1,35 +1,37 @@
 <template>
-  <section @click="toggleMenu()">
-    <v-menu v-show="menus.menuMain" :menu-option="menuOption" ref="menu"></v-menu>
-
-  </section>
+  <div class="page has-navbar" v-nav="{ title: 'About', showBackButton: true }">
+    <div class="page-content">
+      <button @click="showModal()">显示</button>
+    </div>
+  </div>
 </template>
-
 <script>
-
-    import menu from './menus/Menu.vue';
-    export default {
-        components: {
-            'v-menu': menu
-        },
-        mounted() {
-            this.toggleMenu()
-        },
-        data() {
+  import TestModal from './menus/TestModal.vue'
+    export default{
+        data(){
             return {
-                menus: {
-                    menuMain: false
-                }
+                modal: undefined
             }
         },
+        mounted() {
+            $modal.fromComponent(TestModal, {
+                title: '模态窗标题',
+                theme: 'default'
+            }).then((modal) => {
+                this.modal = modal
+            })
+        },
+        destroyed() {
+            if (this.modal)
+                $modal.destroy(this.modal)
+        },
         methods: {
-            toggleMenu() {
-                console.log('toggle menu');
-                this.menus.menuMain = !this.menus.menuMain;
+            showModal() {
+                this.modal.show()
             }
         }
     }
 </script>
-<style lang="scss">
 
+<style lang="scss">
 </style>

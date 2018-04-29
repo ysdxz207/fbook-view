@@ -1,16 +1,15 @@
 <template xmlns:v-bind="http://www.w3.org/1999/xhtml">
     <div class="page" v-nav="{hideNavbar: true}">
-        <div v-text="data.book.bookId"></div>
         <div class="page-content">
-            <p class="title" v-text="data.chapter.title" v-bind:style="readConfig.readTitleStyle"></p>
+            <p class="title" v-text="bookData.chapter.title" v-bind:style="readConfig.readTitleStyle"></p>
             <div class="text-center read-content"
                  v-bind:style="readConfig.readContentStyle"
-                 v-html="data.chapter.content"
+                 v-html="bookData.chapter.content"
                 @click="toggleMenu()">
 
             </div>
         </div>
-        <v-menu v-show="menus.menuMain" :menu-option="menuOption" ref="menu"></v-menu>
+        <v-menu :menuOption="menuOption" ref="menu"></v-menu>
 
     </div>
 </template>
@@ -23,21 +22,29 @@
             'v-menu': menu
         },
         mounted() {
-            this.loadChapter();
-
+            this.loadChapter(0);
+        },
+        created() {
+            let _this = this;
+            _this.bus.$on('reloadChapterInfo', function (chapterInfo) {
+                _this.bookData = chapterInfo;
+            })
         },
         data() {
+            let _this = this;
             return {
-                data: {
+                bookData: {
                     book: {
-                        bookId: this.$route.query.bookId,
+                        id: _this.$route.query.bookId,
                         chapterName: '',
                         chapter: 1,
                         content: '',
                         bookInfo: {}
                     },
                     chapter: {},
-                    bookRead: {},
+                    bookRead: {
+                        lastReadingChapterNum: 1
+                    },
                     bookReadSetting: {},
                     bookChapters: []
                 },
@@ -55,52 +62,32 @@
                         padding: '0px'
                     }
                 },
-                menus: {
-                    menuMain: false
+                menuOption: {
+                    bookId: _this.$route.query.bookId,
+                    transition: 'fade',
+                    prevChapter: function() {
+                        _this.loadChapter(-1);
+                    },
+                    nextChapter: function() {
+                        _this.loadChapter(1)
+                    },
+                    isShowMenu: false
                 }
             }
         },
         methods: {
-            loadChapter() {
+            loadChapter(direction) {
                 let _this = this;
-                $loading.show('加载中...');
-
-
-                _this.ajax({
-                    method: 'post',
-                    url: '/chapter',
-                    data: {
-                        bookId: _this.data.book.bookId
-                    }
-
-                }).then(function (response) {
-                    $loading.hide();
-                    switch (response.data.statusCode) {
-                        case 200:
-                            let data = response.data.data;
-                            _this.data = data;
-                            break;
-                        case 300:
-
-                        default:
-                            $toast.show(response.data.message)
-                    }
-
-                }).catch(function (error) {
-                    $loading.hide();
-
-                    $dialog.alert({
-                        content: '服务器异常:' + JSON.stringify(error),
-                        okTheme: 'calm'
-                    })
+                _this.getChapterInfo({
+                    bookId: _this.bookData.book.id,
+                    lastChapterNum: _this.bookData.bookChapters.length,
+                    direction: direction
+                }, function(chapterInfo) {
+                    _this.bookData = chapterInfo;
                 });
             },
-            refreshConfig() {
-
-            },
             toggleMenu() {
-                console.log('toggle menu');
-                this.menus.menuMain = !this.menus.menuMain;
+                this.$refs.menu.$emit('toggle');
             }
         }
     }

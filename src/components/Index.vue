@@ -44,6 +44,10 @@
                                 break;
                             default:
                                 $toast.show(response.data.message)
+                                if (response.data.errorCode == 'LOGIN_WRONG_PASSWORD') {
+                                    localStorage.removeItem('fbook_username');
+                                    $router.forward({path: '/login'});
+                                }
                         }
                     }).catch(function (error) {
                         $loading.hide();

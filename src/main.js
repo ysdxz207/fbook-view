@@ -8,6 +8,7 @@ const Search = () => import('./components/Search.vue');
 const Book = () => import('./components/Book.vue');
 const Read = () => import('./components/Read.vue');
 const Source = () => import('./components/Source.vue');
+const Chapters = () => import('./components/menus/MenuChapterList.vue');
 const About = () => import('./components/About.vue');
 
 // Routes
@@ -72,6 +73,14 @@ const routes = [
             }
         },
         {
+            path: '/chapters',
+            name: Chapters,
+            component: Chapters,
+            meta: {
+                requireAuth: true
+            }
+        },
+        {
             path: '/about',
             name: About,
             component: About
@@ -86,7 +95,7 @@ Vue.use(Vonic.app, {
 
 const env = process.env.NODE_ENV;
 
-const baseURL = env == 'production' ? 'http://api.book.puyixiaowo.win' : 'http://api.book.puyixiaowo.win';
+const baseURL = env == 'production' ? 'http://api.book.puyixiaowo.win' : 'http://localhost:8010';
 
 
 
@@ -118,7 +127,6 @@ $router.beforeEach((to, from, next) => {
         if (localStorage.getItem('fbook_username')) {// 判断是否登录
             next()
         } else {
-            console.log('未登录')
             // 没登录则跳转到登录界面
             next({
                 path: '/login',
@@ -165,5 +173,73 @@ ajax.interceptors.response.use(
         return Promise.reject(error.response)
     });
 
+/**
+ *
+ * @param params
+ *      {
+ *          bookId: '',
+ *          lastChapterNum: 1000,
+ *          direction: '',//可选
+ *          chapterNum: 3,//可选
+ *          lastReadingChapterNum: 1//可选
+ *      }
+ * @param callback
+ */
+Vue.prototype.getChapterInfo = function (args, callback) {
+    let _this = this;
+    args = Vue.util.extend(args, {lastReadingChapterNum: 1});
 
+    if (args.lastReadingChapterNum == 1
+        && args.direction == -1) {
+        $toast.show('已经是第一章了');
+        return;
+    }
 
+    if (args.lastReadingChapterNum
+        == args.lastChapterNum
+        && args.direction == 1) {
+        $toast.show('已经是最后一章了');
+        return;
+    }
+    $loading.show('加载中...');
+
+    let params = {};
+    if (args.direction
+        && args.direction != 0) {
+        params.chapter = args.lastReadingChapterNum + args.direction;
+    } else if (args.direction == undefined) {
+        params.chapter = args.chapterNum;
+    }
+
+    params.bookId = args.bookId;
+
+    _this.ajax({
+        method: 'post',
+        url: '/chapter',
+        data: params
+
+    }).then(function (response) {
+        $loading.hide();
+        switch (response.data.statusCode) {
+            case 200:
+                let data = response.data.data;
+                callback(data);
+                break;
+            case 300:
+
+            default:
+                $toast.show(response.data.message)
+        }
+
+    }).catch(function (error) {
+        $loading.hide();
+
+        $dialog.alert({
+            content: '服务器异常:' + JSON.stringify(error),
+            okTheme: 'calm'
+        })
+    });
+};
+
+//创建一个事件中转站，便于组件之间传递数据
+Vue.prototype.bus = new Vue();
