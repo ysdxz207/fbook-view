@@ -45,7 +45,10 @@
                                 _this.search.bookList = response.data.list;
                                 break;
                             default:
-                                $toast.show(response.data.message)
+                                $dialog.alert({
+                                    content: '错误:' + response.data.message,
+                                    okTheme: 'energized'
+                                })
                         }
                     }).catch(function (error) {
                         $loading.hide();

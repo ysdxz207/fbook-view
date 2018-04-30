@@ -80,10 +80,15 @@
                 let _this = this;
                 _this.getChapterInfo({
                     bookId: _this.bookData.book.id,
-                    lastChapterNum: _this.bookData.bookChapters.length,
+                    lastReadingChapterNum: _this.bookData.bookRead.lastReadingChapterNum,
                     direction: direction
                 }, function(chapterInfo) {
                     _this.bookData = chapterInfo;
+                    //关闭目录
+                    _this.bus.$emit('hide', {
+                        menu: true,
+                        chapterList: true
+                    });
                 });
             },
             toggleMenu() {

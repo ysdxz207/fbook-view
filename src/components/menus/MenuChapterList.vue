@@ -1,21 +1,34 @@
 <template>
-    <div class="page-content">
+    <div class="page-content" id="content_chapter_list">
         <list class="list-ios">
             <item v-for="chapter in chapterList" @click.native="loadChapter(chapter)" class="item-chapter-list">{{chapter.title}}</item>
         </list>
+        <scrollbar :scrollbarConfig="scrollbarConfig" ref="scrollbar"></scrollbar>
+
     </div>
 </template>
 <script>
+    import Scrollbar from '../utils/Scrollbar.vue'
+
     export default{
         props: {
             bookId: String,
             chapterList: Array
         },
+        components: {
+            'scrollbar': Scrollbar
+        },
         mounted() {
             this.loadChapterList();
+            this.scrollbarConfig.contentObj = document.querySelector('#content_chapter_list')
+            this.scrollbarConfig.head = 44;
         },
         data() {
             return {
+                scrollbarConfig: {
+                    contentObj: undefined,
+                    head: 0
+                }
             }
         },
         methods: {

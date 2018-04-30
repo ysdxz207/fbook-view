@@ -1,37 +1,40 @@
 <template>
   <div class="page has-navbar" v-nav="{ title: 'About', showBackButton: true }">
-    <div class="page-content">
-      <button @click="showModal()">显示</button>
+    <div class="page-content"  id="content">
+        <list v-for="n in 200">
+            <item v-text="n"></item>
+        </list>
+      <scrollbar :scrollbarConfig="scrollbarConfig" ref="scrollbar"></scrollbar>
     </div>
   </div>
 </template>
 <script>
-  import TestModal from './menus/TestModal.vue'
+    import Scrollbar from './utils/Scrollbar.vue'
     export default{
         data(){
             return {
-                modal: undefined
+                scrollbarConfig: {
+                    contentObj: undefined,
+                    head: 0
+                }
             }
+        },
+        components: {
+            'scrollbar': Scrollbar
         },
         mounted() {
-            $modal.fromComponent(TestModal, {
-                title: '模态窗标题',
-                theme: 'default'
-            }).then((modal) => {
-                this.modal = modal
-            })
+            this.scrollbarConfig.contentObj = document.querySelector('#content')
+            this.scrollbarConfig.head = document.querySelector('.navbar').clientHeight
         },
         destroyed() {
-            if (this.modal)
-                $modal.destroy(this.modal)
+
         },
         methods: {
-            showModal() {
-                this.modal.show()
-            }
+
         }
     }
 </script>
 
 <style lang="scss">
+
 </style>

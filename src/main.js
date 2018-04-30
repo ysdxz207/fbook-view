@@ -187,7 +187,7 @@ ajax.interceptors.response.use(
  */
 Vue.prototype.getChapterInfo = function (args, callback) {
     let _this = this;
-    args = Vue.util.extend(args, {lastReadingChapterNum: 1});
+    args = Vue.util.extend({lastReadingChapterNum: 1}, args);
 
     if (args.lastReadingChapterNum == 1
         && args.direction == -1) {
@@ -228,7 +228,10 @@ Vue.prototype.getChapterInfo = function (args, callback) {
             case 300:
 
             default:
-                $toast.show(response.data.message)
+                $dialog.alert({
+                    content: '错误:' + response.data.message,
+                    okTheme: 'energized'
+                })
         }
 
     }).catch(function (error) {

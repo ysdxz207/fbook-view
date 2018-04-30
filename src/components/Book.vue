@@ -79,7 +79,10 @@
                                 _this.book = response.data.data;
                                 break;
                             default:
-                                $toast.show(response.data.message)
+                                $dialog.alert({
+                                    content: '错误:' + response.data.message,
+                                    okTheme: 'energized'
+                                })
                         }
                     }).catch(function (error) {
                     $loading.hide();
@@ -100,7 +103,10 @@
                                 _this.book.onShelf = response.data.data;
                                 break;
                             default:
-                                $toast.show(response.data.message)
+                                $dialog.alert({
+                                    content: '错误:' + response.data.message,
+                                    okTheme: 'energized'
+                                })
                         }
                     }).catch(function (error) {
                     $loading.hide();
