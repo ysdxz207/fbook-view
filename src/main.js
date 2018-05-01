@@ -8,7 +8,7 @@ const Search = () => import('./components/Search.vue');
 const Book = () => import('./components/Book.vue');
 const Read = () => import('./components/Read.vue');
 const Source = () => import('./components/Source.vue');
-const Chapters = () => import('./components/menus/MenuChapterList.vue');
+const MenuChapterList = () => import('./components/menus/MenuChapterList.vue');
 const About = () => import('./components/About.vue');
 const Test = () => import('./components/Test.vue');
 
@@ -75,8 +75,8 @@ const routes = [
         },
         {
             path: '/chapters',
-            name: Chapters,
-            component: Chapters,
+            name: MenuChapterList,
+            component: MenuChapterList,
             meta: {
                 requireAuth: true
             }

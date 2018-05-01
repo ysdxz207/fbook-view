@@ -18,7 +18,7 @@
                             <div class="btn-prev-chapter" @click="menuOption.prevChapter">上一章</div>
                             <div class="btn-next-chapter" @click="menuOption.nextChapter">下一章</div>
                         </div>
-                        <button class="button-icon btn-toggle" @click="showToggle()">
+                        <button class="button-icon btn-toggle" @click="showToggleOperate()">
                             <span><i class="icon ion-ios-toggle"></i></span>
                         </button>
                         <button class="button-icon btn-chapters" @click="showChapterList()">
@@ -71,7 +71,9 @@
                 chapterList: [],
                 modalOptions: {
                     rightIcon: 'ion-ios-arrow-up'
-                }
+                },
+                operationOptions: ['上下', '左右'],
+                operationModal: 0
             }
         },
         created() {
@@ -112,7 +114,7 @@
                 $router.forward({path: '/source'})
             },
             showChapterList() {
-                this.$refs.modal.$emit('show');
+                $router.forward({path: '/chapters', query: this.chapterList})
             },
             toggleChapterListSort() {
                 //反转章节
@@ -120,6 +122,21 @@
                 //设置图标
                 this.modalOptions.rightIcon = this.chapterList[0].chapterNum
                     < this.chapterList[this.chapterList.length - 1].chapterNum ? 'ion-ios-arrow-down' : 'ion-ios-arrow-up'
+            },
+            showToggleOperate(theme) {
+                let options = {
+                    effect: 'scale',
+                    title: '',
+                    buttons: [],
+                    showClose: true,
+                    components: {
+
+                    }
+                }
+                let popup = $popup.fromTemplate('<von-radio :options="operationOptions" v-model="operationModel"></von-radio>', options)
+                popup.show().then((buttonIndex) => {
+                    console.log(buttonIndex)
+                })
             }
 
         }
