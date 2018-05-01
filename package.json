@@ -5,7 +5,7 @@
   "author": "ysdxz207 <ysdxz207@qq.com>",
   "license": "MIT",
   "scripts": {
-    "dev": "webpack-dev-server --mode development --inline --hot --port 1234",
+    "dev": "webpack-dev-server --mode development --inline --hot --host 192.168.3.2 --port 1234",
     "build": "cross-env NODE_ENV=production webpack --progress --hide-modules"
   },
   "dependencies": {

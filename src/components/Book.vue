@@ -99,7 +99,6 @@
                     .then(function (response) {
                         switch (response.data.statusCode) {
                             case 200:
-                                $loading.hide();
                                 _this.book.onShelf = response.data.data;
                                 break;
                             default:
@@ -107,7 +106,9 @@
                                     content: '错误:' + response.data.message,
                                     okTheme: 'energized'
                                 })
+
                         }
+                        $loading.hide();
                     }).catch(function (error) {
                     $loading.hide();
                     $dialog.alert({

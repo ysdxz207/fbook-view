@@ -30,12 +30,16 @@
                     </section>
                 </template>
             </div>
+            <modal-chapter-list :modalOptions="modalOptions"
+                                :chapterList="chapterList"
+                                :rightBtnCallback="rightBtnCallback" ref="modal"></modal-chapter-list>
+
         </div>
     </transition>
 </template>
 <script>
 
-    import MenuChapterList from './MenuChapterList.vue'
+    import MenuChapterList from '../menus/MenuChapterList.vue'
 
     export default {
         name: 'menu',
@@ -50,20 +54,30 @@
                     nextChapter: function () {
                         console.log('下一章')
                     },
-                    isShowMenu: false
+                    isShowMenu: false,
+                    chapterList: [],
                 }
             }
         },
+        components: {
+            'modal-chapter-list': MenuChapterList
+        },
         data() {
+            let _this = this;
             return {
-                sidebarChapters: undefined,
-                modalChapterList: undefined
+                rightBtnCallback: function() {
+                    _this.toggleChapterListSort()
+                },
+                chapterList: [],
+                modalOptions: {
+                    rightIcon: 'ion-ios-arrow-up'
+                }
             }
         },
         created() {
             let _this = this;
             _this.bus.$on('hide', function (hides) {
-                if (hides.menu) {
+                if (hides.hideMenu) {
                     _this.menuOption.isShowMenu = false;
                 }
             });
@@ -75,30 +89,11 @@
         mounted() {
             let _this = this;
 
-            MenuChapterList.props = {
-                bookId: {
-                    default: _this.menuOption.bookId
-                },
-                chapterList: Array
-            }
-            $modal.fromComponent(MenuChapterList, {
-                title: '目录',
-                theme: 'default',
-                onHide: () => {
-//                    console.log('modal hide')
-                }
-            }).then((modal) => {
-                _this.bus.$on('hide', function (hides) {
-                    if (hides.chapterList) {
-                        modal.hide();
-                    }
-                });
-                _this.modalChapterList = modal
-            })
         },
-        destroyed() {
-            if (this.modalChapterList)
-                $modal.destroy(this.modalChapterList)
+        watch: {
+            'menuOption.chapterList': function (value) {
+                this.chapterList = value;
+            }
         },
         methods: {
             onBackClick() {
@@ -117,7 +112,14 @@
                 $router.forward({path: '/source'})
             },
             showChapterList() {
-                this.modalChapterList.show()
+                this.$refs.modal.$emit('show');
+            },
+            toggleChapterListSort() {
+                //反转章节
+                this.chapterList.reverse();
+                //设置图标
+                this.modalOptions.rightIcon = this.chapterList[0].chapterNum
+                    < this.chapterList[this.chapterList.length - 1].chapterNum ? 'ion-ios-arrow-down' : 'ion-ios-arrow-up'
             }
 
         }

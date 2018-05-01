@@ -64,6 +64,7 @@
                 },
                 menuOption: {
                     bookId: _this.$route.query.bookId,
+                    chapterList: [],
                     transition: 'fade',
                     prevChapter: function() {
                         _this.loadChapter(-1);
@@ -74,6 +75,13 @@
                     isShowMenu: false
                 }
             }
+        },
+        watch: {
+            //将获取到的章节列表传给菜单组件，菜单组件再将其传给目录组件
+            bookData: function (value) {
+                this.menuOption.chapterList = value.bookChapters;
+            }
+
         },
         methods: {
             loadChapter(direction) {
@@ -86,8 +94,8 @@
                     _this.bookData = chapterInfo;
                     //关闭目录
                     _this.bus.$emit('hide', {
-                        menu: true,
-                        chapterList: true
+                        hideMenu: true,
+                        hideChapterList: true
                     });
                 });
             },

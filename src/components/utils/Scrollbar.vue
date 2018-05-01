@@ -64,11 +64,11 @@
         width: 0 !important;
     }
     .scrollbar {
-        width: 24px;
-        height: 24px;
+        width: 30px;
+        height: 30px;
         position: fixed;
         right: 0px;
         z-index: 99;
-        font-size: 24px;
+        font-size: 30px;
     }
 </style>

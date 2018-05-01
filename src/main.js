@@ -10,6 +10,7 @@ const Read = () => import('./components/Read.vue');
 const Source = () => import('./components/Source.vue');
 const Chapters = () => import('./components/menus/MenuChapterList.vue');
 const About = () => import('./components/About.vue');
+const Test = () => import('./components/Test.vue');
 
 // Routes
 
@@ -84,6 +85,11 @@ const routes = [
             path: '/about',
             name: About,
             component: About
+        },
+        {
+            path: '/test',
+            name: Test,
+            component: Test
         }
     ];
 
@@ -95,7 +101,7 @@ Vue.use(Vonic.app, {
 
 const env = process.env.NODE_ENV;
 
-const baseURL = env == 'production' ? 'http://api.book.puyixiaowo.win' : 'http://localhost:8010';
+const baseURL = env == 'production' ? 'http://api.book.puyixiaowo.win' : 'http://192.168.3.2:8010';
 
 
 
