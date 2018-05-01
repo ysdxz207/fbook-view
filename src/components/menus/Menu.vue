@@ -30,9 +30,9 @@
                     </section>
                 </template>
             </div>
-            <modal-chapter-list :modalOptions="modalOptions"
-                                :chapterList="chapterList"
-                                :rightBtnCallback="rightBtnCallback" ref="modal"></modal-chapter-list>
+            <modal-chapter-list v-show="false"
+                                :modalOptions="modalOptions"
+                                ref="refChapterList"></modal-chapter-list>
 
         </div>
     </transition>
@@ -54,8 +54,7 @@
                     nextChapter: function () {
                         console.log('下一章')
                     },
-                    isShowMenu: false,
-                    chapterList: [],
+                    isShowMenu: false
                 }
             }
         },
@@ -65,10 +64,7 @@
         data() {
             let _this = this;
             return {
-                rightBtnCallback: function() {
-                    _this.toggleChapterListSort()
-                },
-                chapterList: [],
+                sidebar: undefined,
                 modalOptions: {
                     rightIcon: 'ion-ios-arrow-up'
                 },
@@ -90,12 +86,11 @@
         },
         mounted() {
             let _this = this;
-
+            let templateChapterList = _this.$refs.refChapterList.$el.innerHTML
+            this.sidebar = $sidebar.fromTemplate (templateChapterList, {position: 'right'})
         },
-        watch: {
-            'menuOption.chapterList': function (value) {
-                this.chapterList = value;
-            }
+        destroyed() {
+            $sidebar.destroy()
         },
         methods: {
             onBackClick() {
@@ -114,14 +109,7 @@
                 $router.forward({path: '/source'})
             },
             showChapterList() {
-                $router.forward({path: '/chapters', query: this.chapterList})
-            },
-            toggleChapterListSort() {
-                //反转章节
-                this.chapterList.reverse();
-                //设置图标
-                this.modalOptions.rightIcon = this.chapterList[0].chapterNum
-                    < this.chapterList[this.chapterList.length - 1].chapterNum ? 'ion-ios-arrow-down' : 'ion-ios-arrow-up'
+                this.sidebar.toggle();
             },
             showToggleOperate(theme) {
                 let options = {

@@ -1,21 +1,20 @@
-<template xmlns:v-bind="http://www.w3.org/1999/xhtml">
-    <div class="page has-navbar" v-nav="{ title: '目录', showBackButton: true }">
-        <div class="page-content"  id="content">
-            <list class="list-ios" id="content_chapter_list">
-                <item v-for="chapter in chapterList" @click.native="loadChapter(chapter)" class="item-chapter-list">{{chapter.title}}</item>
-            </list>
-            <scrollbar :scrollbarConfig="scrollbarConfig" ref="scrollbar"></scrollbar>
-        </div>
+<template>
+    <div>
+        <div v-text="ppap"></div>
+        <list class="list-ios" id="content_chapter_list">
+            <item v-for="chapter in chapterList" @click.native="loadChapter(chapter)" class="item-chapter-list">{{chapter.title}}</item>
+        </list>
+        <scrollbar :scrollbarConfig="scrollbarConfig" ref="scrollbar"></scrollbar>
     </div>
 </template>
 <script>
     import Scrollbar from '../utils/Scrollbar.vue'
 
     export default{
+        name: 'menuChapterList',
         props: {
             modalOptions: Object,
-            rightBtnCallback: Function,
-            chapterList: []
+            rightBtnCallback: Function
         },
         components: {
             'scrollbar': Scrollbar
@@ -31,10 +30,15 @@
                 }
             });
 
+            _this.bus.$on('chapterList', function (chapterList) {
+                _this.chapterList = chapterList;
+            });
+
         },
         mounted() {
-            this.scrollbarConfig.contentObj = document.querySelector('#content_chapter_list')
-            this.scrollbarConfig.head = 44;
+            let _this = this;
+            _this.scrollbarConfig.contentObj = document.querySelector('#content_chapter_list')
+            _this.scrollbarConfig.head = 44;
 
             Vue.util.extend(this.modalOptions, {
                 transition: 'slide-right',
@@ -42,6 +46,9 @@
                 leftIcon: 'ion-ios-arrow-back',
                 rightIcon: 'ion-ios-arrow-down'
             });
+
+//            _this.loadChapterList();
+            this.testload()
         },
         data() {
             return {
@@ -49,12 +56,9 @@
                     contentObj: undefined,
                     head: 0
                 },
-                isShowModal: false
-            }
-        },
-        watch: {
-            chapterList: function (value) {
-                this.chapterList = value;
+                isShowModal: false,
+                chapterList: [],
+                ppap: 'a'
             }
         },
         methods: {
@@ -65,17 +69,17 @@
                 let _this = this;
 
                 _this.ajax.post('/chapterList', {bookId: _this.modalOptions.bookId}).then(function (response) {
-                        switch (response.data.statusCode) {
-                            case 200:
-                                _this.chapterList = response.data.data;
-                                break;
-                            default:
-                                $toast.show('目录加载失败：' + response.data.message)
-                                if (response.data.errorCode == 'LOGIN_WRONG_PASSWORD') {
-                                    localStorage.removeItem('fbook_username');
-                                    $router.forward({path: '/login'});
-                                }
-                        }
+                    switch (response.data.statusCode) {
+                        case 200:
+                            _this.chapterList = response.data.data;
+                            break;
+                        default:
+                            $toast.show('目录加载失败：' + response.data.message)
+                            if (response.data.errorCode == 'LOGIN_WRONG_PASSWORD') {
+                                localStorage.removeItem('fbook_username');
+                                $router.forward({path: '/login'});
+                            }
+                    }
                 }).catch(function (error) {
                     $dialog.alert({
                         content: '服务器异常:' + JSON.stringify(error ),
@@ -105,6 +109,20 @@
                 } else {
                     console.log('default right btn click')
                 }
+            },
+            toggleChapterListSort() {
+                //反转章节
+                this.chapterList.reverse();
+                //设置图标
+                this.modalOptions.rightIcon = this.chapterList[0].chapterNum
+                < this.chapterList[this.chapterList.length - 1].chapterNum ? 'ion-ios-arrow-down' : 'ion-ios-arrow-up'
+            },
+            testload() {
+                let _this = this;
+                setTimeout(function () {
+                    console.log('111')
+                    _this.ppap = ['111'];
+                }, 2000)
             }
         }
     }

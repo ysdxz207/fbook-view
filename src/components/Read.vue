@@ -9,7 +9,8 @@
 
             </div>
         </div>
-        <v-menu :menuOption="menuOption" ref="menu"></v-menu>
+        <v-menu :menuOption="menuOption"
+                :chapterList="chapterList" ref="menu"></v-menu>
 
     </div>
 </template>
@@ -63,8 +64,6 @@
                     }
                 },
                 menuOption: {
-                    bookId: _this.$route.query.bookId,
-                    chapterList: [],
                     transition: 'fade',
                     prevChapter: function() {
                         _this.loadChapter(-1);
@@ -73,15 +72,9 @@
                         _this.loadChapter(1)
                     },
                     isShowMenu: false
-                }
+                },
+                chapterList: []
             }
-        },
-        watch: {
-            //将获取到的章节列表传给菜单组件，菜单组件再将其传给目录组件
-            bookData: function (value) {
-                this.menuOption.chapterList = value.bookChapters;
-            }
-
         },
         methods: {
             loadChapter(direction) {
@@ -92,6 +85,7 @@
                     direction: direction
                 }, function(chapterInfo) {
                     _this.bookData = chapterInfo;
+                    _this.bus.$emit('chapterList', chapterInfo.bookChapters);
                     //关闭目录
                     _this.bus.$emit('hide', {
                         hideMenu: true,
