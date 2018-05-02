@@ -10,7 +10,7 @@
             </div>
         </div>
         <v-menu :menuOption="menuOption"
-                :chapterList="chapterList" ref="menu"></v-menu>
+                ref="menu"></v-menu>
 
     </div>
 </template>
@@ -86,6 +86,8 @@
                 }, function(chapterInfo) {
                     _this.bookData = chapterInfo;
                     _this.bus.$emit('chapterList', chapterInfo.bookChapters);
+                    //滚动到顶部
+                    document.querySelector('body').scrollTop = 0;
                     //关闭目录
                     _this.bus.$emit('hide', {
                         hideMenu: true,

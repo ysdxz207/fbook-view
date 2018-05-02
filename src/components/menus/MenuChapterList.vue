@@ -1,8 +1,7 @@
 <template>
     <div>
-        <div v-text="ppap"></div>
         <list class="list-ios" id="content_chapter_list">
-            <item v-for="chapter in chapterList" @click.native="loadChapter(chapter)" class="item-chapter-list">{{chapter.title}}</item>
+            <item v-for="chapter in chapterList" @click="loadChapter(chapter)" class="item-chapter-list">{{chapter.title}}</item>
         </list>
         <scrollbar :scrollbarConfig="scrollbarConfig" ref="scrollbar"></scrollbar>
     </div>
@@ -14,7 +13,8 @@
         name: 'menuChapterList',
         props: {
             modalOptions: Object,
-            rightBtnCallback: Function
+            rightBtnCallback: Function,
+            chapterList: Array
         },
         components: {
             'scrollbar': Scrollbar
@@ -29,11 +29,6 @@
                     _this.isShowModal = false;
                 }
             });
-
-            _this.bus.$on('chapterList', function (chapterList) {
-                _this.chapterList = chapterList;
-            });
-
         },
         mounted() {
             let _this = this;
@@ -47,8 +42,6 @@
                 rightIcon: 'ion-ios-arrow-down'
             });
 
-//            _this.loadChapterList();
-            this.testload()
         },
         data() {
             return {
@@ -57,37 +50,15 @@
                     head: 0
                 },
                 isShowModal: false,
-                chapterList: [],
-                ppap: 'a'
+                chapterList: []
             }
         },
         methods: {
             closeModal() {
                 this.isShowModal = false;
             },
-            loadChapterList() {
-                let _this = this;
-
-                _this.ajax.post('/chapterList', {bookId: _this.modalOptions.bookId}).then(function (response) {
-                    switch (response.data.statusCode) {
-                        case 200:
-                            _this.chapterList = response.data.data;
-                            break;
-                        default:
-                            $toast.show('目录加载失败：' + response.data.message)
-                            if (response.data.errorCode == 'LOGIN_WRONG_PASSWORD') {
-                                localStorage.removeItem('fbook_username');
-                                $router.forward({path: '/login'});
-                            }
-                    }
-                }).catch(function (error) {
-                    $dialog.alert({
-                        content: '服务器异常:' + JSON.stringify(error ),
-                        okTheme: 'calm'
-                    })
-                });
-            },
             loadChapter(chapter) {
+                console.log('load chapter')
                 let _this = this;
                 _this.getChapterInfo({
                     bookId: chapter.bookId,
@@ -116,13 +87,6 @@
                 //设置图标
                 this.modalOptions.rightIcon = this.chapterList[0].chapterNum
                 < this.chapterList[this.chapterList.length - 1].chapterNum ? 'ion-ios-arrow-down' : 'ion-ios-arrow-up'
-            },
-            testload() {
-                let _this = this;
-                setTimeout(function () {
-                    console.log('111')
-                    _this.ppap = ['111'];
-                }, 2000)
             }
         }
     }

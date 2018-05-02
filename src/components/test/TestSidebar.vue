@@ -2,6 +2,7 @@
     <div class="page">
         <div class="page-content" id="content">
             <h1 v-text="msg"></h1>
+            <button @click="showToast()">吸纳时</button>
         </div>
     </div>
 </template>
@@ -22,6 +23,9 @@
             console.log(this.$el.innerHTML)
         },
         methods: {
+            showToast() {
+                $toast.show('heihei')
+            }
         }
     }
 </script>

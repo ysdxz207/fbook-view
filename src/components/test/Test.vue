@@ -38,7 +38,7 @@
         methods: {
 
             toggleSidebar() {
-                this.sidebar.toggle()
+                this.sidebar && this.sidebar.toggle()
             },
             getMsg() {
                 let _this = this;
@@ -48,6 +48,7 @@
                 }, 2000)
             },
             refreshSidebar() {
+                console.log(this.$refs.testsidebar)
                 let str = this.$refs.testsidebar.$el.innerHTML
                 this.sidebar = $sidebar.fromTemplate (str, {position: 'left'})
 

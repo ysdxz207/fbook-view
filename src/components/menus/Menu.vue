@@ -57,17 +57,14 @@
                     },
                     isShowMenu: false
                 }
-            },
-            chapterList: Array
+            }
         },
         components: {
             'modal-chapter-list': MenuChapterList
         },
         updated() {
             //加载到章节内容后刷新子页面
-            let _this = this;
-            let templateChapterList = _this.$refs.refChapterList.$el.innerHTML
-            this.sidebar = $sidebar.fromTemplate (templateChapterList, {position: 'right'})
+            this.refreshSidebar()
         },
         data() {
             let _this = this;
@@ -90,7 +87,11 @@
 
             _this.$on('toggle', function () {
                 _this.menuOption.isShowMenu = !_this.menuOption.isShowMenu;
-            })
+            });
+
+            _this.bus.$on('chapterList', function (chapterList) {
+                _this.chapterList = chapterList;
+            });
         },
         mounted() {
             let _this = this;
@@ -115,9 +116,9 @@
                 $router.forward({path: '/source'})
             },
             showChapterList() {
-                this.sidebar.toggle();
+                this.sidebar && this.sidebar.toggle();
             },
-            showToggleOperate(theme) {
+            showToggleOperate() {
                 let options = {
                     effect: 'scale',
                     title: '',
@@ -131,6 +132,11 @@
                 popup.show().then((buttonIndex) => {
                     console.log(buttonIndex)
                 })
+            },
+            refreshSidebar() {
+                let _this = this;
+                let templateChapterList = _this.$refs.refChapterList.$el.innerHTML
+                this.sidebar = $sidebar.fromTemplate (templateChapterList, {position: 'right'})
             }
 
         }
