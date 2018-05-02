@@ -26,7 +26,13 @@
             'v-test-sidebar': TestSidebar
         },
         mounted() {
-            this.getMsg()
+            this.getMsg();
+            let _this = this;
+            this.$nextTick().then(() => {
+                document.querySelector(".btn-show-toast").addEventListener('click', function () {
+                    $toast.show('haha');
+                })
+            })
         },
         destroyed() {
             $sidebar.destroy()
