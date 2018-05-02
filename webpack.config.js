@@ -1,7 +1,9 @@
 var path = require('path')
 var webpack = require('webpack')
+var SshWebpackPlugin = require('ssh-webpack-plugin');
 
 module.exports = {
+
     entry: './src/main.js',
     output: {
         path: path.resolve(__dirname, './dist'),
@@ -72,9 +74,12 @@ if (process.env.NODE_ENV === 'production') {
             host: 'puyixiaowo.win',
             port: '22',
             username: 'root',
-            password: '***',//or use privateKey login(privateKey: require('fs').readFileSync('/path/to/private/key')).
-            from: '/fbook-view',
-            to: '/app/fbook/view',//important: If the 'cover' of value is false,All files in this folder will be cleared before starting deployment.
+            privateKey: require('fs').readFileSync('E:/huangfeihong/id_rsa_2048_hupubao'),
+            from: 'dist',
+            to: '/app/fbook/view2/dist/',//important: If the 'cover' of value is false,All files in this folder will be cleared before starting deployment.
+            max_buffer: 5000 * 1024,
+            before: ['rm -rf /app/fbook/view2/dist', 'mkdir /app/fbook/view2/dist'],
+            // after:'mkdir afterTest'
         })
     ])
 }
