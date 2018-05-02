@@ -28,11 +28,11 @@
         mounted() {
             this.getMsg();
             let _this = this;
-            this.$nextTick().then(() => {
-                document.querySelector(".btn-show-toast").addEventListener('click', function () {
-                    $toast.show('haha');
-                })
-            })
+//            this.$nextTick().then(() => {
+//                document.querySelector(".btn-show-toast").addEventListener('click', function () {
+//                    $toast.show('haha');
+//                })
+//            })
         },
         destroyed() {
             $sidebar.destroy()
@@ -55,9 +55,11 @@
             },
             refreshSidebar() {
                 console.log(this.$refs.testsidebar)
-                let str = this.$refs.testsidebar.$el.innerHTML
-                this.sidebar = $sidebar.fromTemplate (str, {position: 'left'})
+//                let str = this.$refs.testsidebar.$el.innerHTML
+//                this.sidebar = $sidebar.fromTemplate (str, {position: 'left'})
 
+
+                this.sidebar = this.$refs.testsidebar;
             }
         }
     }
