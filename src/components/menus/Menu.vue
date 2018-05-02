@@ -32,6 +32,7 @@
             </div>
             <modal-chapter-list v-show="false"
                                 :modalOptions="modalOptions"
+                                :chapterList="chapterList"
                                 ref="refChapterList"></modal-chapter-list>
 
         </div>
@@ -56,10 +57,17 @@
                     },
                     isShowMenu: false
                 }
-            }
+            },
+            chapterList: Array
         },
         components: {
             'modal-chapter-list': MenuChapterList
+        },
+        updated() {
+            //加载到章节内容后刷新子页面
+            let _this = this;
+            let templateChapterList = _this.$refs.refChapterList.$el.innerHTML
+            this.sidebar = $sidebar.fromTemplate (templateChapterList, {position: 'right'})
         },
         data() {
             let _this = this;
@@ -86,8 +94,6 @@
         },
         mounted() {
             let _this = this;
-            let templateChapterList = _this.$refs.refChapterList.$el.innerHTML
-            this.sidebar = $sidebar.fromTemplate (templateChapterList, {position: 'right'})
         },
         destroyed() {
             $sidebar.destroy()
