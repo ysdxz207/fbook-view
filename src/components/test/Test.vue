@@ -7,9 +7,9 @@
 
      }">
         <div class="page-content" id="content">
-            <v-test-sidebar v-show="false" ref="testsidebar"></v-test-sidebar>
+            <v-test-sidebar v-show="false" :msg="msg" ref="testsidebar"></v-test-sidebar>
 
-            <div v-text="msg"></div>
+            <div v-text="msg" ></div>
         </div>
     </div>
 </template>
@@ -26,13 +26,14 @@
             'v-test-sidebar': TestSidebar
         },
         mounted() {
-            let str = this.$refs.testsidebar.$el.innerHTML
-            this.sidebar = $sidebar.fromTemplate (str, {position: 'left'})
-
             this.getMsg()
         },
         destroyed() {
             $sidebar.destroy()
+        },
+        updated() {
+
+            this.refreshSidebar()
         },
         methods: {
 
@@ -43,8 +44,13 @@
                 let _this = this;
                 setTimeout(function () {
                     console.log('两秒后的值')
-                    _this.msg = '两秒后的值';
+                    _this.msg = '2秒后的值'
                 }, 2000)
+            },
+            refreshSidebar() {
+                let str = this.$refs.testsidebar.$el.innerHTML
+                this.sidebar = $sidebar.fromTemplate (str, {position: 'left'})
+
             }
         }
     }

@@ -7,24 +7,21 @@
 </template>
 <script>
     export default {
+        props: {
+            msg: '旧值'
+        },
         data() {
             return {
-                msg: '旧值'
             }
         },
         mounted() {
-            this.getMsg()
         },
         destroyed() {
         },
+        updated() {
+            console.log(this.$el.innerHTML)
+        },
         methods: {
-            getMsg() {
-                let _this = this;
-                setTimeout(function () {
-                    _this.msg = '新值';
-                    console.log('新值')
-                }, 3000)
-            }
         }
     }
 </script>
