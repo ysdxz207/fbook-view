@@ -72,7 +72,7 @@ if (process.env.NODE_ENV === 'production') {
             host: 'puyixiaowo.win',
             port: '22',
             username: 'root',
-            password: '//hupubao207',//or use privateKey login(privateKey: require('fs').readFileSync('/path/to/private/key')).
+            password: '***',//or use privateKey login(privateKey: require('fs').readFileSync('/path/to/private/key')).
             from: '/fbook-view',
             to: '/app/fbook/view',//important: If the 'cover' of value is false,All files in this folder will be cleared before starting deployment.
         })
