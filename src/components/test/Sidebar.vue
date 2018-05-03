@@ -33,53 +33,7 @@
 
 <style lang="scss" scoped>
     @import "../../assets/scss/transition";
-/*
-    @mixin view-right() {
-        @include my-translate3d(100%, 0, 0);
-    }
 
-    @mixin view-left() {
-        @include my-translate3d(-33%, 0, 0);
-    }
-
-    @mixin view-center() {
-        @include my-translate3d(0, 0, 0);
-    }
-
-    @mixin my-translate3d($x, $y, $z) {
-        @include my-transform( translate3d($x, $y, $z) );
-    }
-
-    @mixin my-transform($val) {
-        -webkit-transform: $val;
-        transform: $val;
-    }
-
-    @mixin transition-duration($transition-duration) {
-        -webkit-transition-duration: $transition-duration;
-        transition-duration: $transition-duration;
-    }
-
-    @mixin transition-timing-function($transition-timing) {
-        -webkit-transition-timing-function: $transition-timing;
-        transition-timing-function: $transition-timing;
-    }
-
-    @mixin transition-property($property) {
-        -webkit-transition-property: $property;
-        transition-property: $property;
-    }
-    $ios-transition-duration:              500ms !default;
-    $ios-transition-timing-function:       cubic-bezier(.36, .66, .04, 1) !default;
-
-    .slide-left-enter-active,
-    .slide-left-leave-active {
-        @include transition-duration($ios-transition-duration);
-        @include transition-timing-function($ios-transition-timing-function);
-        -webkit-transition-property: opacity, -webkit-transform;
-        transition-property: opacity, transform;
-    }
-*/
 
 
     .sidebar {
