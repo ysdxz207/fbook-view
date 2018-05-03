@@ -1,5 +1,5 @@
 <template>
-    <transition name="slide-left">
+    <transition name="slide-right">
         <div v-show="isShowSidebar" class="sidebar">
             <div class="sidebar-header">
                 世人都说神仙好，唯有功名忘不了
