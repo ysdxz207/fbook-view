@@ -16,8 +16,9 @@
         bind(el, binding, vnode) {
             function documentHandler(e) {
                 // 这里判断点击的元素是否是本身，是本身，则返回
+                console.log(el)
                 if (el.contains(e.target)
-                    || binding.value.getIsShowSidebar()) {
+                    || vnode.data.show) {
                     return false;
                 }
                 // 判断指令中是否绑定了函数
