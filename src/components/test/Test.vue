@@ -1,13 +1,13 @@
 <template>
     <div class="page has-navbar" v-nav="{
-   title: 'Test',
-    showBackButton: true,
-    showMenuButton: true,
-  onMenuButtonClick: toggleSidebar
+        title: 'Test',
+        showBackButton: true,
+        showMenuButton: true,
+        onMenuButtonClick: toggleSidebar
 
      }">
         <div class="page-content" id="content">
-            <v-sidebar :isShowSidebar="isShowSidebar" :chapterList="chapterList" ref="sidebar"></v-sidebar>
+            <v-sidebar :options="sidebarOptions" :chapterList="chapterList" ref="sidebar"></v-sidebar>
         </div>
     </div>
 </template>
@@ -17,7 +17,10 @@
     export default {
         data() {
             return {
-                isShowSidebar: false,
+                sidebarOptions: {
+                    isShowSidebar: false,
+                    side: 'right'
+                },
                 chapterList: []
             }
         },
@@ -32,7 +35,7 @@
         methods: {
 
             toggleSidebar() {
-                this.isShowSidebar = !this.isShowSidebar;
+                this.sidebarOptions.isShowSidebar = !this.sidebarOptions.isShowSidebar;
             }
         }
     }
