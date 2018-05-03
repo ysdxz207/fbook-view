@@ -11,7 +11,6 @@ const Source = () => import('./components/Source.vue');
 const MenuChapterList = () => import('./components/menus/MenuChapterList.vue');
 const About = () => import('./components/About.vue');
 const Test = () => import('./components/test/Test.vue');
-const TestSidebar = () => import('./components/test/TestSidebar.vue');
 
 // Routes
 
@@ -91,11 +90,6 @@ const routes = [
             path: '/test',
             name: Test,
             component: Test
-        },
-        {
-            path: '/testsidebar',
-            name: TestSidebar,
-            component: TestSidebar
         }
     ];
 

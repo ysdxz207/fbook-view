@@ -7,59 +7,32 @@
 
      }">
         <div class="page-content" id="content">
-            <v-test-sidebar v-show="false" :msg="msg" ref="testsidebar"></v-test-sidebar>
-
-            <div v-text="msg" ></div>
+            <v-sidebar :isShowSidebar="isShowSidebar" :chapterList="chapterList" ref="sidebar"></v-sidebar>
         </div>
     </div>
 </template>
 <script>
-    import TestSidebar from './TestSidebar.vue'
+    import Sidebar from './Sidebar.vue'
+
     export default {
         data() {
             return {
-                sidebar: undefined,
-                msg: '默认值'
+                isShowSidebar: false,
+                chapterList: []
             }
         },
         components: {
-            'v-test-sidebar': TestSidebar
+            'v-sidebar': Sidebar
         },
         mounted() {
-            this.getMsg();
-            let _this = this;
-//            this.$nextTick().then(() => {
-//                document.querySelector(".btn-show-toast").addEventListener('click', function () {
-//                    $toast.show('haha');
-//                })
-//            })
-        },
-        destroyed() {
-            $sidebar.destroy()
         },
         updated() {
 
-            this.refreshSidebar()
         },
         methods: {
 
             toggleSidebar() {
-                this.sidebar && this.sidebar.toggle()
-            },
-            getMsg() {
-                let _this = this;
-                setTimeout(function () {
-                    console.log('两秒后的值')
-                    _this.msg = '2秒后的值'
-                }, 2000)
-            },
-            refreshSidebar() {
-                console.log(this.$refs.testsidebar)
-//                let str = this.$refs.testsidebar.$el.innerHTML
-//                this.sidebar = $sidebar.fromTemplate (str, {position: 'left'})
-
-
-                this.sidebar = this.$refs.testsidebar;
+                this.isShowSidebar = !this.isShowSidebar;
             }
         }
     }
