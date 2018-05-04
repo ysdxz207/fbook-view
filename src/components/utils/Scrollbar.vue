@@ -39,20 +39,20 @@
                 let thumb = e.target;
                 let contentY = this.scrollbarConfig.contentObj.scrollHeight;
                 let moveY = e.targetTouches[0].clientY;
-                let Y = window.innerHeight;
+                let windowHeight = window.innerHeight;
                 let head = this.scrollbarConfig.head || 0;
-                let scrollTop = (moveY - head - thumb.clientHeight / 2) / (Y - head) * contentY;
+//                let thumbHeight = thumb.clientHeight;
+                let scrollTop = (moveY - head - thumb.clientHeight / 2) / (windowHeight - head) * contentY;
                 this.scrollbarConfig.contentObj.scrollTop = scrollTop;
             },
             onWheelScroll(e) {
                 let thumb = document.querySelector('.scrollbar');
                 let contentObj = e.target;
                 let contentY = contentObj.scrollHeight;
-                let Y = window.innerHeight;
+                let windowHeight = window.innerHeight;
                 let head = this.scrollbarConfig.head || 0;
-                let lY = head / Y * contentY;
                 let scrollTop = contentObj.scrollTop;
-                let moveY = scrollTop / contentY * (Y - head);
+                let moveY = scrollTop / contentY * (windowHeight - head);
                 thumb.style.top = moveY + head + 'px';
             }
         }
@@ -70,5 +70,6 @@
         right: 0px;
         z-index: 99;
         font-size: 30px;
+        opacity: 0.4;
     }
 </style>

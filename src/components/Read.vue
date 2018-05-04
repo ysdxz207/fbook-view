@@ -84,7 +84,7 @@
                     lastReadingChapterNum: _this.bookData.bookRead.lastReadingChapterNum,
                     direction: direction
                 }, function(chapterInfo) {
-                    chapterInfo.chapter.content = '';
+//                    chapterInfo.chapter.content = '';
                     _this.bookData = chapterInfo;
                     _this.bus.$emit('chapterList', chapterInfo.bookChapters);
                     //滚动到顶部

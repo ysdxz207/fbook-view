@@ -87,7 +87,7 @@
     }
 
     .sidebar {
-        width: 60%;
+        width: 75%;
         height: 100%;
         position: absolute;
         top: 0px;

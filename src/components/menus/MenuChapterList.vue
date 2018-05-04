@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="chapter-list">
         <list class="list-ios" id="content_chapter_list">
             <item v-for="chapter in chapterList" @click="loadChapter(chapter)" class="item-chapter-list">{{chapter.title}}</item>
         </list>
@@ -33,7 +33,7 @@
         mounted() {
             let _this = this;
             _this.scrollbarConfig.contentObj = document.querySelector('#content_chapter_list')
-            _this.scrollbarConfig.head = 44;
+            _this.scrollbarConfig.head = 0;
 
         },
         updated() {
@@ -89,6 +89,9 @@
 
 <style scoped lang="scss">
 
+    .chapter-list {
+        height: 100%;
+    }
     .list-ios {
         height: 100%;
         overflow-y: scroll;
