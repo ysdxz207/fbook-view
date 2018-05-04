@@ -22,9 +22,7 @@
                     isShowSidebar: false,
                     side: 'right',
                     sidebarComponent: SidebarChapterList
-
-                },
-                chapterList: []
+                }
             }
         },
         components: {
@@ -32,6 +30,14 @@
             'v-sidebar-chapter-component': SidebarChapterList
         },
         mounted() {
+            let self = this;
+            setTimeout(function () {
+                let arr = [];
+                for (let i = 0; i < 200; i++) {
+                    arr.push('item - ' + i)
+                }
+                self.bus.$emit('testChapterList', arr)
+            }, 500)
         },
         updated() {
 

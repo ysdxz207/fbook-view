@@ -12,22 +12,22 @@
     export default{
         name: 'menuChapterList',
         props: {
-            modalOptions: Object,
             rightBtnCallback: Function,
-            chapterList: Array
+            sidebarOptions: {
+                default: function () {
+                    return {
+                        chapterList: []
+                    }
+                }
+            }
         },
         components: {
             'scrollbar': Scrollbar
         },
         created() {
             let _this = this;
-            _this.$on('show', function () {
-                _this.isShowModal = true;
-            });
-            _this.bus.$on('hide', function (hides) {
-                if (hides.hideChapterList) {
-                    _this.isShowModal = false;
-                }
+            _this.bus.$on('chapterList', function (chapterList) {
+                _this.chapterList = chapterList;
             });
         },
         mounted() {
@@ -35,13 +35,8 @@
             _this.scrollbarConfig.contentObj = document.querySelector('#content_chapter_list')
             _this.scrollbarConfig.head = 44;
 
-            Vue.util.extend(this.modalOptions, {
-                transition: 'slide-right',
-                title: '目录',
-                leftIcon: 'ion-ios-arrow-back',
-                rightIcon: 'ion-ios-arrow-down'
-            });
-
+        },
+        updated() {
         },
         data() {
             return {
@@ -83,10 +78,10 @@
             },
             toggleChapterListSort() {
                 //反转章节
-                this.chapterList.reverse();
+                this.sidebarOptions.chapterList.reverse();
                 //设置图标
-                this.modalOptions.rightIcon = this.chapterList[0].chapterNum
-                < this.chapterList[this.chapterList.length - 1].chapterNum ? 'ion-ios-arrow-down' : 'ion-ios-arrow-up'
+//                this.modalOptions.rightIcon = this.chapterList[0].chapterNum
+//                < this.chapterList[this.chapterList.length - 1].chapterNum ? 'ion-ios-arrow-down' : 'ion-ios-arrow-up'
             }
         }
     }

@@ -21,7 +21,7 @@
                         <button class="button-icon btn-toggle" @click="showToggleOperate()">
                             <span><i class="icon ion-ios-toggle"></i></span>
                         </button>
-                        <button class="button-icon btn-chapters" @click="showChapterList()">
+                        <button class="button-icon btn-chapters" @click="toggleMenuChapterList()">
                             <span><i class="icon ion-navicon-round"></i></span>
                         </button>
                         <button class="button-icon btn-font" @click="showSetFont()">
@@ -30,16 +30,14 @@
                     </section>
                 </template>
             </div>
-            <modal-chapter-list v-show="false"
-                                :modalOptions="modalOptions"
-                                :chapterList="chapterList"
-                                ref="refChapterList"></modal-chapter-list>
+            <v-sidebar :options="sidebarOptions" :chapterList="chapterList" ref="sidebar"></v-sidebar>
 
         </div>
     </transition>
 </template>
 <script>
 
+    import Sidebar from '../utils/Sidebar.vue'
     import MenuChapterList from '../menus/MenuChapterList.vue'
 
     export default {
@@ -60,18 +58,19 @@
             }
         },
         components: {
+            'v-sidebar': Sidebar,
             'modal-chapter-list': MenuChapterList
         },
         updated() {
-            //加载到章节内容后刷新子页面
-            this.refreshSidebar()
         },
         data() {
             let _this = this;
             return {
-                sidebar: undefined,
-                modalOptions: {
-                    rightIcon: 'ion-ios-arrow-up'
+                sidebarOptions: {
+                    isShowSidebar: false,
+                    side: 'right',
+                    sidebarComponent: MenuChapterList
+
                 },
                 operationOptions: ['上下', '左右'],
                 operationModal: 0
@@ -89,9 +88,7 @@
                 _this.menuOption.isShowMenu = !_this.menuOption.isShowMenu;
             });
 
-            _this.bus.$on('chapterList', function (chapterList) {
-                _this.chapterList = chapterList;
-            });
+
         },
         mounted() {
             let _this = this;
@@ -115,8 +112,8 @@
             bookSource() {
                 $router.forward({path: '/source'})
             },
-            showChapterList() {
-                this.sidebar && this.sidebar.toggle();
+            toggleMenuChapterList() {
+                this.sidebarOptions.isShowSidebar = !this.sidebarOptions.isShowSidebar;
             },
             showToggleOperate() {
                 let options = {
@@ -132,11 +129,6 @@
                 popup.show().then((buttonIndex) => {
                     console.log(buttonIndex)
                 })
-            },
-            refreshSidebar() {
-                let _this = this;
-                let templateChapterList = _this.$refs.refChapterList.$el.innerHTML
-                this.sidebar = $sidebar.fromTemplate (templateChapterList, {position: 'right'})
             }
 
         }

@@ -44,7 +44,8 @@
                     return {
                         isShowSidebar: false,
                         side: 'left',
-                        sidebarComponent: '<div>侧边栏</div>'
+                        sidebarComponent: '<div>侧边栏</div>',
+                        dataOptions: {}
                     }
                 }
 
