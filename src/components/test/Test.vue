@@ -13,19 +13,23 @@
 </template>
 <script>
     import Sidebar from './Sidebar.vue'
+    import SidebarChapterList from './SidebarChapterList.vue'
 
     export default {
         data() {
             return {
                 sidebarOptions: {
                     isShowSidebar: false,
-                    side: 'right'
+                    side: 'right',
+                    sidebarComponent: SidebarChapterList
+
                 },
                 chapterList: []
             }
         },
         components: {
-            'v-sidebar': Sidebar
+            'v-sidebar': Sidebar,
+            'v-sidebar-chapter-component': SidebarChapterList
         },
         mounted() {
         },

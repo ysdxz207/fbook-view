@@ -4,21 +4,18 @@
              class="sidebar"
              v-bind:class="options.side"
              v-clickoutside="{handleClose: handleClose,getIsShowSidebar: getIsShowSidebar}">
-            <div class="sidebar-header">
-                世人都说神仙好，唯有功名忘不了
-            </div>
+            <component :is="options.sidebarComponent"></component>
         </div>
     </transition>
 </template>
 <script>
+
     const clickoutside = {
         // 初始化指令
         bind(el, binding, vnode) {
             function documentHandler(e) {
                 // 这里判断点击的元素是否是本身，是本身，则返回
-                console.log(el)
-                if (el.contains(e.target)
-                    || vnode.data.show) {
+                if (el.contains(e.target)) {
                     return false;
                 }
                 // 判断指令中是否绑定了函数
@@ -46,7 +43,8 @@
                 default: function () {
                     return {
                         isShowSidebar: false,
-                        side: 'left'
+                        side: 'left',
+                        sidebarComponent: '<div>侧边栏</div>'
                     }
                 }
 
@@ -54,22 +52,23 @@
             chapterList: Array
         },
         data() {
-            return {}
+            return {
+                originShowState: false
+            }
         },
-        mounted() {
-            let _this = this;
+        created() {
         },
         destroyed() {
         },
         updated() {
+            let _this = this;
+            this.originShowState = this.options.isShowSidebar;
         },
         methods: {
             handleClose(e) {
-                console.log('close')
-                this.options.isShowSidebar = false;
-            },
-            getIsShowSidebar() {
-                return this.options.isShowSidebar;
+                if (this.originShowState) {
+                    this.options.isShowSidebar = false;
+                }
             }
         },
         directives: {clickoutside}
@@ -97,10 +96,4 @@
         box-shadow: 0 0 12px rgba(0, 0, 0, .35);
     }
 
-    .sidebar-header {
-        width: 100%;
-        height: 44px;
-        background-color: #F9F9F9;
-        box-shadow: 0 0 15px rgba(0, 0, 0, .15);
-    }
 </style>
