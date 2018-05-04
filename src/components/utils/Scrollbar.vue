@@ -1,9 +1,11 @@
 <template>
-    <div class="scrollbar ion-navicon-round"
-         draggable="true"
-         @touchmove="onTouchmove($event)"
+    <div class="scrollbar-orbit">
+        <div class="scrollbar ion-navicon-round"
+             draggable="true"
+             @touchmove="onTouchmove($event)"
 
-    >
+        >
+    </div>
 
     </div>
 </template>
@@ -11,7 +13,6 @@
 
     /**
      * contentObj:内容对象
-     * head:头部高度
      */
     export default {
         name: 'scrollbar',
@@ -20,15 +21,17 @@
         },
         data() {
             return {
+                objectOrbit: undefined,
+                objectThumb: undefined
             }
         },
         mounted() {
-
+            this.objectOrbit = document.querySelector('.scrollbar-orbit');
+            this.objectThumb = document.querySelector('.scrollbar');
         },
         watch: {
             'scrollbarConfig.contentObj': function (contentObj) {
-                this.scrollbarTop = this.scrollbarConfig.head + 'px'
-                contentObj.addEventListener('scroll', this.onWheelScroll);
+                contentObj.addEventListener('mousewheel', this.onWheelScroll);
             }
         },
         destroyed() {
@@ -36,24 +39,27 @@
         },
         methods: {
             onTouchmove(e) {
-                let thumb = e.target;
+                let thumb = this.objectThumb;
                 let contentY = this.scrollbarConfig.contentObj.scrollHeight;
                 let moveY = e.targetTouches[0].clientY;
-                let windowHeight = window.innerHeight;
-                let head = this.scrollbarConfig.head || 0;
-//                let thumbHeight = thumb.clientHeight;
-                let scrollTop = (moveY - head - thumb.clientHeight / 2) / (windowHeight - head) * contentY;
+                let orbitHeight = this.objectOrbit.clientHeight;
+                let scrollTop = contentY / ((orbitHeight) / moveY);
                 this.scrollbarConfig.contentObj.scrollTop = scrollTop;
+                moveY = moveY - thumb.clientHeight / 2;
+
+                if (moveY >= 0
+                    && moveY <= orbitHeight) {
+                    thumb.style.top = moveY + 'px';
+                }
             },
             onWheelScroll(e) {
-                let thumb = document.querySelector('.scrollbar');
-                let contentObj = e.target;
+                let thumb = this.objectThumb;
+                let contentObj = this.scrollbarConfig.contentObj;
                 let contentY = contentObj.scrollHeight;
-                let windowHeight = window.innerHeight;
-                let head = this.scrollbarConfig.head || 0;
+                let orbitHeight = this.objectOrbit.clientHeight;
                 let scrollTop = contentObj.scrollTop;
-                let moveY = scrollTop / contentY * (windowHeight - head);
-                thumb.style.top = moveY + head + 'px';
+                let moveY = (orbitHeight) / (contentY / scrollTop);
+                thumb.style.top = moveY + 'px';
             }
         }
     }
@@ -63,10 +69,18 @@
     ::-webkit-scrollbar{
         width: 0 !important;
     }
+    .scrollbar-orbit {
+        height: 94%;
+        width: 10px;
+        position: absolute;
+        top: 0px;
+        right: 0px;
+        z-index: 99;
+    }
     .scrollbar {
         width: 30px;
         height: 30px;
-        position: fixed;
+        position: absolute;
         right: 0px;
         z-index: 99;
         font-size: 30px;
