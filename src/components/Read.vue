@@ -1,7 +1,7 @@
 <template xmlns:v-bind="http://www.w3.org/1999/xhtml">
     <div class="page" v-nav="{hideNavbar: true}">
-        <div class="page-content">
-            <p class="title" v-text="bookData.chapter.title" v-bind:style="readConfig.readTitleStyle"></p>
+        <div class="page-content" v-bind:style="readConfig.readTitleStyle">
+            <p class="title" v-text="bookData.chapter.title"></p>
             <div class="text-center read-content"
                  v-bind:style="readConfig.readContentStyle"
                  v-html="bookData.chapter.content"
@@ -105,6 +105,5 @@
 <style lang="scss">
 
     .read-content {
-        height: 100%;
     }
 </style>

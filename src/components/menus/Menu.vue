@@ -147,7 +147,6 @@
         background-color: #101010;
         position: fixed;
         left: 0px;
-        z-index: 1;
         color: #FAFAFA;
     }
 

@@ -68,7 +68,7 @@
 
 <style lang="scss">
     ::-webkit-scrollbar{
-        width: 0 !important;
+        display: none;
     }
     .scrollbar-orbit {
         height: 94%;
@@ -76,14 +76,13 @@
         position: absolute;
         top: 0px;
         right: 0px;
-        z-index: 1;
+        z-index: 2;
     }
     .scrollbar {
         width: 30px;
         height: 30px;
         position: absolute;
         right: 0px;
-        z-index: 1;
         font-size: 30px;
         opacity: 0.4;
     }

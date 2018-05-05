@@ -1,10 +1,13 @@
 <template xmlns:v-bind="http://www.w3.org/1999/xhtml">
     <transition :name="'slide-' + options.side">
-        <div v-show="options.isShowSidebar"
-             class="sidebar"
-             v-bind:class="options.side"
-             v-clickoutside="{handleClose: handleClose,getIsShowSidebar: getIsShowSidebar}">
-            <component :is="options.sidebarComponent" :sidebarOptions="options.sidebarOptions"></component>
+        <div class="sidebar-main" v-show="options.isShowSidebar">
+
+            <div class="sidebar-mask"></div>
+            <div class="sidebar"
+                 v-bind:class="options.side"
+                 v-clickoutside="{handleClose: handleClose,getIsShowSidebar: getIsShowSidebar}">
+                <component :is="options.sidebarComponent" :sidebarOptions="options.sidebarOptions"></component>
+            </div>
         </div>
     </transition>
 </template>
@@ -56,6 +59,14 @@
                 originShowState: false
             }
         },
+        created() {
+            let _this = this;
+            _this.bus.$on('hide', function (hides) {
+                if (hides.hideChapterList) {
+                    _this.options.isShowSidebar = false;
+                }
+            });
+        },
         mounted() {
         },
         destroyed() {
@@ -77,7 +88,6 @@
 
 <style lang="scss" scoped>
     @import "../../assets/scss/transition.scss";
-
     .left {
         left: 0px;
     }
@@ -86,6 +96,20 @@
         right: 0px;
     }
 
+    .sidebar-main {
+        width: 100%;
+        height: 100%;
+        -webkit-overflow-scrolling:touch;
+    }
+    .sidebar-mask {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        z-index: 1;
+        opacity: 0;
+    }
     .sidebar {
         width: 75%;
         height: 100%;
@@ -94,6 +118,7 @@
         background-color: #f5f5f5;
         z-index: 1;
         box-shadow: 0 0 12px rgba(0, 0, 0, .35);
+        opacity: 1;
     }
 
 </style>
