@@ -32,6 +32,7 @@
         watch: {
             'scrollbarConfig.contentObj': function (contentObj) {
                 contentObj.addEventListener('mousewheel', this.onWheelScroll);
+                contentObj.addEventListener('touchmove', this.onWheelScroll);
             }
         },
         destroyed() {

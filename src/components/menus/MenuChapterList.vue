@@ -33,7 +33,6 @@
         mounted() {
             let _this = this;
             _this.scrollbarConfig.contentObj = document.querySelector('#content_chapter_list')
-            _this.scrollbarConfig.head = 0;
 
         },
         updated() {
@@ -41,8 +40,7 @@
         data() {
             return {
                 scrollbarConfig: {
-                    contentObj: undefined,
-                    head: 0
+                    contentObj: undefined
                 },
                 isShowModal: false,
                 chapterList: []
