@@ -72,7 +72,7 @@
     }
     .scrollbar-orbit {
         height: 94%;
-        width: 10px;
+        width: 0px;
         position: absolute;
         top: 0px;
         right: 0px;
