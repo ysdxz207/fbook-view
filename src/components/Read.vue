@@ -29,7 +29,10 @@
             let _this = this;
             _this.bus.$on('reloadChapterInfo', function (chapterInfo) {
                 _this.bookData = chapterInfo;
-            })
+            });
+            _this.bus.$on('readScrollTop', function () {
+                document.querySelector('.page-content').scrollTop = 0;
+            });
         },
         data() {
             let _this = this;
@@ -88,7 +91,8 @@
                     _this.bookData = chapterInfo;
                     _this.bus.$emit('chapterList', chapterInfo.bookChapters);
                     //滚动到顶部
-                    document.querySelector('body').scrollTop = 0;
+                    _this.bus.$emit('readScrollTop');
+
                     //关闭目录
                     _this.bus.$emit('hide', {
                         hideMenu: true,
@@ -98,6 +102,8 @@
             },
             toggleMenu() {
                 this.$refs.menu.$emit('toggle');
+                console.log('scroll')
+
             }
         }
     }

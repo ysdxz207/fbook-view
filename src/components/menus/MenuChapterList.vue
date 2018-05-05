@@ -63,7 +63,9 @@
                         hideChapterList: true
                     });
                     //更新内容
-                    _this.bus.$emit('reloadChapterInfo', chapterInfo)
+                    _this.bus.$emit('reloadChapterInfo', chapterInfo);
+                    //滚动到顶部
+                    _this.bus.$emit('readScrollTop');
                 });
             },
             customRightButton() {
