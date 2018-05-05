@@ -105,5 +105,6 @@
 <style lang="scss">
 
     .read-content {
+        min-height: 100%;
     }
 </style>

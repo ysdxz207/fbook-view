@@ -58,7 +58,7 @@
         data() {
             return {
                 book: {
-                    bookId: this.$route.query.bookId,
+                    id: this.$route.query.bookId,
                     aId: this.$route.query.aId,
                     faceUrl: '',
                     bookInfo: {
@@ -71,7 +71,7 @@
                 let _this = this;
                 $loading.show('读取书籍信息...');
 
-                _this.ajax.post('/detail', {bookId: this.book.bookId, aId: this.book.aId})
+                _this.ajax.post('/detail', {bookId: this.book.id, aId: this.book.aId})
                     .then(function (response) {
                         switch (response.data.statusCode) {
                             case 200:
@@ -94,7 +94,7 @@
             },
             addOrDelBook() {
                 let _this = this;
-                $loading.show()
+                $loading.show();
                 _this.ajax.post('/addOrDel', {aId: this.book.aId})
                     .then(function (response) {
                         switch (response.data.statusCode) {
@@ -119,7 +119,7 @@
             },
             startRead() {
                 $router.forward({path: '/read', query: {
-                    bookId: this.$route.query.bookId
+                    bookId: this.book.id
                 }});
             }
         }
