@@ -22,8 +22,21 @@
         data() {
             return {
                 objectOrbit: undefined,
-                objectThumb: undefined
+                objectThumb: undefined,
+                contentScrollTop: 0
             }
+        },
+        created() {
+            let _this = this;
+            var evt = document.createEvent("HTMLEvents");
+            evt.initEvent("touchscroll", false, false);
+
+            setInterval(function () {
+                if (_this.scrollbarConfig.contentObj.scrollTop != _this.contentScrollTop) {
+                    _this.contentScrollTop = _this.scrollbarConfig.contentObj.scrollTop;
+                    _this.scrollbarConfig.contentObj.dispatchEvent(evt);
+                }
+            }, 10);
         },
         mounted() {
             this.objectOrbit = document.querySelector('.scrollbar-orbit');
@@ -32,7 +45,7 @@
         watch: {
             'scrollbarConfig.contentObj': function (contentObj) {
                 contentObj.addEventListener('mousewheel', this.onWheelScroll);
-                contentObj.addEventListener('touchmove', this.onWheelScroll);
+                contentObj.addEventListener('touchscroll', this.onWheelScroll);
             }
         },
         destroyed() {
