@@ -7004,7 +7004,7 @@ vm-browserify@0.0.4:
   dependencies:
     indexof "0.0.1"
 
-vonic@^2.0.0-beta.15:
+vonic@^2.0.0-rc.1:
   version "2.0.0-rc.1"
   resolved "http://registry.npm.taobao.org/vonic/download/vonic-2.0.0-rc.1.tgz#0a13f7e2926187e923fac2c66653ff2e826cb216"
   dependencies:

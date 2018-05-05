@@ -11,7 +11,7 @@
   "dependencies": {
     "axios": "^0.18.0",
     "node-sass": "^4.8.3",
-    "vonic": "^2.0.0-beta.15",
+    "vonic": "^2.0.0-rc.1",
     "vue": "^2.5.16",
     "vue-router": "^3.0.1"
   },

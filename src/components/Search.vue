@@ -2,7 +2,7 @@
   <div class="page has-navbar" v-nav="{ title: '搜索书籍', showBackButton: true }">
     <div class="page-content">
 
-      <search v-model="search.keywords" placeholder="输入关键字" :on-search="onSearch" :on-cancel="onCancel" ></search>
+      <search v-model="search.keywords" placeholder="输入关键字" :on-search="onSearch" :on-cancel="onCancel" cancelText="取消"></search>
 
       <div v-for="book in search.bookList">
         <router-link :to="{path:'/book',query: {bookId: book.id, aId: book.aId}}" class="link">
