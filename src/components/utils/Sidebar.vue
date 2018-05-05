@@ -92,7 +92,7 @@
         position: absolute;
         top: 0px;
         background-color: #f5f5f5;
-        z-index: 99;
+        z-index: 1;
         box-shadow: 0 0 12px rgba(0, 0, 0, .35);
     }
 

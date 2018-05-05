@@ -192,6 +192,8 @@ ajax.interceptors.response.use(
  * @param callback
  */
 Vue.prototype.getChapterInfo = function (args, callback) {
+    console.log('加载中>..')
+    $loading.show('加载中...');
     let _this = this;
     args = Vue.util.extend({lastReadingChapterNum: 1}, args);
 
@@ -207,7 +209,7 @@ Vue.prototype.getChapterInfo = function (args, callback) {
         $toast.show('已经是最后一章了');
         return;
     }
-    $loading.show('加载中...');
+
 
     let params = {};
     if (args.direction

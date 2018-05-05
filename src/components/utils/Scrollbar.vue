@@ -76,14 +76,14 @@
         position: absolute;
         top: 0px;
         right: 0px;
-        z-index: 99;
+        z-index: 1;
     }
     .scrollbar {
         width: 30px;
         height: 30px;
         position: absolute;
         right: 0px;
-        z-index: 99;
+        z-index: 1;
         font-size: 30px;
         opacity: 0.4;
     }

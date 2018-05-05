@@ -7,7 +7,7 @@
 
      }">
         <div class="page-content" id="content">
-            <v-sidebar :options="sidebarOptions" :chapterList="chapterList" ref="sidebar"></v-sidebar>
+            <v-sidebar :options="sidebarOptions" ref="sidebar"></v-sidebar>
         </div>
     </div>
 </template>

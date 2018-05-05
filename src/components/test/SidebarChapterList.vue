@@ -1,10 +1,8 @@
 <template>
-    <div>
-        <list class="list-ios">
-            <item v-for="chapter in chapterList" @click="loadChapter(chapter)" class="item-chapter-list">{{chapter}}</item>
-        </list>
-        <scrollbar :scrollbarConfig="scrollbarConfig" ref="scrollbar"></scrollbar>
-    </div>
+    <list class="list-ios">
+    <button @click="showButton">点我</button>
+        <item v-for="chapter in chapterList" @click.native="loadChapter(chapter)" class="item-chapter-list">{{chapter}}</item>
+    </list>
 </template>
 <script>
     export default {
@@ -14,7 +12,7 @@
         },
         data() {
             return {
-
+                chapterList: []
             }
         },
         created() {
@@ -29,7 +27,9 @@
 
         },
         methods: {
-
+            showButton(){
+                console.log('show')
+            },
             loadChapter(chapter) {
                 console.log('load chapter:' + chapter)
             }

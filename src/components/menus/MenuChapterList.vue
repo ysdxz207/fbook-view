@@ -1,7 +1,7 @@
 <template>
     <div class="chapter-list">
         <list class="list-ios" id="content_chapter_list">
-            <item v-for="chapter in chapterList" @click="loadChapter(chapter)" class="item-chapter-list">{{chapter.title}}</item>
+            <item v-for="chapter in chapterList" @click.native="loadChapter(chapter)" class="item-chapter-list">{{chapter.title}}</item>
         </list>
         <scrollbar :scrollbarConfig="scrollbarConfig" ref="scrollbar"></scrollbar>
     </div>
@@ -51,7 +51,6 @@
                 this.isShowModal = false;
             },
             loadChapter(chapter) {
-                console.log('load chapter')
                 let _this = this;
                 _this.getChapterInfo({
                     bookId: chapter.bookId,

@@ -76,10 +76,10 @@ if (process.env.NODE_ENV === 'production') {
             username: 'root',
             privateKey: require('fs').readFileSync('E:/huangfeihong/id_rsa_2048_hupubao'),
             from: 'dist',
-            to: '/app/fbook/view2/dist/',//important: If the 'cover' of value is false,All files in this folder will be cleared before starting deployment.
+            to: '/app/fbook/view/dist/',//important: If the 'cover' of value is false,All files in this folder will be cleared before starting deployment.
             max_buffer: 5000 * 1024,
-            before: ['rm -rf /app/fbook/view2/dist', 'mkdir /app/fbook/view2/dist'],
-            // after:'mkdir afterTest'
+            before: ['rm -rf /app/fbook/view/dist', 'mkdir /app/fbook/view/dist'],
+            after: ['chmod 755 /app/fbook/view/dist', 'chmod 755 /app/fbook/view/dist/*']
         })
     ])
 }
