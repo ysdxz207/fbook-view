@@ -5,7 +5,8 @@
             <div class="text-center read-content"
                  v-bind:style="readConfig.readContentStyle"
                  v-html="bookData.chapter.content"
-                @click="touchReadContent($event)">
+                 @click="touchReadContent($event)"
+                 @touchstart="touchEndPrevent($event)">
 
             </div>
         </div>
@@ -152,10 +153,6 @@
                     return;
                 }
 
-//                if (bookMenu.isShow()) {
-//                    return;
-//                }
-
                 if ((tap > (widthOrHeight / 3 * 2))
                     && !isBottom) {
                     //向下滚动
@@ -170,6 +167,9 @@
                     return;
                 }
 
+            },
+            touchEndPrevent(e) {
+                e.preventDefault();
             }
         }
     }
