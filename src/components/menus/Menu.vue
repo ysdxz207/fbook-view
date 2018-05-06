@@ -25,12 +25,23 @@
                         <button class="button-icon btn-chapters" @click="toggleMenuChapterList()">
                             <span><i class="icon ion-navicon-round"></i></span>
                         </button>
-                        <button class="button-icon btn-font" @click="showSetFont()">
+                        <button class="button-icon btn-font" @click="toggleSetFontMenu()">
                             <span style="color: #DDDDDD;font-size: 24px;">Aa</span>
                         </button>
                     </section>
                 </template>
             </div>
+            <transition name="fade">
+                <div class="menu-bar menu-font-setting"
+                    v-show="isShowFontSetting">
+                    <template>
+
+                        <section>
+
+                        </section>
+                    </template>
+                </div>
+            </transition>
             <v-sidebar :options="sidebarOptions" :chapterList="chapterList" ref="sidebar"></v-sidebar>
 
         </div>
@@ -74,7 +85,8 @@
                 },
                 bookReadSetting: {
                     pageMethod: '⇄'
-                }
+                },
+                isShowFontSetting: false
             }
         },
         created() {
@@ -131,7 +143,14 @@
                 this.saveReadSetting(this.bookReadSetting);
             },
             toggleMenu() {
+                if (this.isShowFontSetting) {
+                    this.toggleSetFontMenu();
+                    return;
+                }
                 this.menuOption.isShowMenu = !this.menuOption.isShowMenu;
+            },
+            toggleSetFontMenu() {
+                this.isShowFontSetting = !this.isShowFontSetting;
             }
 
         }
@@ -169,6 +188,11 @@
     .menu-footer {
         height: 80px;
         bottom: 0px;
+    }
+    .menu-font-setting {
+        height: 80px;
+        bottom: 0px;
+        z-index: 1;
     }
 
     .icon {
