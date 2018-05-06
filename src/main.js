@@ -278,5 +278,29 @@ Math.easeInOutQuad = function (t, b, c, d) {
     return -c/2 * (t*(t-2) - 1) + b;
 };
 
+//保存配置
+Vue.prototype.saveReadSetting = function (bookReadSetting) {
+    let _this = this;
+    _this.ajax({
+        method: 'post',
+        url: '/saveReadingSetting',
+        data: bookReadSetting
+
+    }).then(function (response) {
+        switch (response.data.statusCode) {
+            case 200:
+
+                break;
+            case 300:
+
+            default:
+                $toast.show('保存读书配置错误:' + response.data.message);
+        }
+
+    }).catch(function (error) {
+        $toast.show('保存读书配置错误(服务器):' + JSON.stringify(error));
+    });
+};
+
 //创建一个事件中转站，便于组件之间传递数据
 Vue.prototype.bus = new Vue();

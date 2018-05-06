@@ -127,6 +127,8 @@
                 }
 
                 this.bus.$emit('readConfigFeedback', this.bookReadSetting);
+
+                this.saveReadSetting(this.bookReadSetting);
             },
             toggleMenu() {
                 this.menuOption.isShowMenu = !this.menuOption.isShowMenu;
