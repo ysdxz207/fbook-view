@@ -1,9 +1,9 @@
 <template xmlns:v-bind="http://www.w3.org/1999/xhtml">
     <div class="page" v-nav="{hideNavbar: true}">
-        <div class="page-content" v-bind:style="readConfig.readTitleStyle">
+        <div class="page-content" v-bind:style="readConfig.readContentStyle">
             <p class="title" v-text="bookData.chapter.title"></p>
             <div class="text-center read-content"
-                 v-bind:style="readConfig.readContentStyle"
+                 v-bind:style="readConfig.lineHeight"
                  v-html="bookData.chapter.content"
                 @click="touchReadContent($event)">
 
@@ -36,6 +36,9 @@
             });
             _this.bus.$on('readConfigFeedback', function (bookReadSetting) {
                 _this.bookData.bookReadSetting = bookReadSetting;
+                //更新内容样式
+                _this.readConfig.readContentStyle.backgroundColor = bookReadSetting.bgColor;
+                _this.readConfig.readContentStyle.color = bookReadSetting.color;
             })
         },
         data() {
@@ -65,10 +68,11 @@
                     },
                     readContentStyle: {
                         fontSize: '20px',
-                        lineHeight: '24px',
                         backgroundColor: '#6d816f',
+                        color: '#dddddd',
                         padding: '0px'
-                    }
+                    },
+                    lineHeight: '28px'
                 },
                 menuOption: {
                     transition: 'fade',
@@ -85,6 +89,16 @@
             }
         },
         methods: {
+            loadReadSetting(chapterInfo) {
+                let _this = this;
+                _this.bookData = chapterInfo;
+                //设置样式
+                console.log(chapterInfo.bookReadSetting)
+                _this.readConfig.readContentStyle.backgroundColor = chapterInfo.bookReadSetting.bgColor;
+                _this.readConfig.readContentStyle.fontSize = chapterInfo.bookReadSetting.fontSize;
+                _this.readConfig.readContentStyle.color = chapterInfo.bookReadSetting.color;
+                _this.readConfig.lineHeight = chapterInfo.bookReadSetting.lineHeight;
+            },
             loadChapter(direction) {
                 let _this = this;
                 _this.getChapterInfo({
@@ -93,7 +107,7 @@
                     direction: direction
                 }, function(chapterInfo) {
 //                    chapterInfo.chapter.content = '';
-                    _this.bookData = chapterInfo;
+                    _this.loadReadSetting(chapterInfo);
                     _this.bus.$emit('chapterList', chapterInfo.bookChapters);
                     _this.bus.$emit('readConfig', chapterInfo.bookReadSetting);
                     //滚动到顶部
@@ -161,5 +175,9 @@
 
     .read-content {
         min-height: 100%;
+    }
+    .read-content p {
+        padding: 0px;
+        margin: 0px;
     }
 </style>

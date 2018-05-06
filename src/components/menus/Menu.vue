@@ -35,9 +35,15 @@
                 <div class="menu-bar menu-font-setting"
                     v-show="isShowFontSetting">
                     <template>
-
-                        <section>
-
+                        <section class="btn-color-group">
+                            <button class="btn btn-color-1" @click="changeBGColor($event)"></button>
+                            <button class="btn btn-color-2" @click="changeBGColor($event)"></button>
+                            <button class="btn btn-color-3" @click="changeBGColor($event)"></button>
+                            <button class="btn btn-color-4" @click="changeBGColor($event)"></button>
+                            <button class="btn btn-color-5" @click="changeBGColor($event)"></button>
+                            <button class="btn btn-color-6" @click="changeBGColor($event)"></button>
+                            <button class="btn btn-color-7" @click="changeBGColor($event)"></button>
+                            <button class="btn btn-color-8" @click="changeBGColor($event)"></button>
                         </section>
                     </template>
                 </div>
@@ -151,6 +157,16 @@
             },
             toggleSetFontMenu() {
                 this.isShowFontSetting = !this.isShowFontSetting;
+            },
+            changeBGColor(e) {
+                let backgroundColor = window.getComputedStyle(e.currentTarget,null).getPropertyValue('background-color');
+                backgroundColor = backgroundColor.colorHex();
+                let color = window.getComputedStyle(e.currentTarget,null).getPropertyValue('color');
+                color = color.colorHex();
+                this.bookReadSetting.bgColor = backgroundColor;
+                this.bookReadSetting.color = color;
+                this.bus.$emit('readConfigFeedback', this.bookReadSetting);
+                this.saveReadSetting(this.bookReadSetting);
             }
 
         }
@@ -190,7 +206,7 @@
         bottom: 0px;
     }
     .menu-font-setting {
-        height: 80px;
+        height: 100px;
         bottom: 0px;
         z-index: 1;
     }
@@ -243,5 +259,56 @@
         position: absolute;
         bottom: 2px;
         right: 8px;
+    }
+
+    /*背景色*/
+    .btn-color-group{
+        padding-top: 10px;
+        text-align: center;
+    }
+    .btn {
+        border-radius: 12px;
+        height:  24px;
+        width: 24px;
+        border: 0px;
+        margin: 0px 3px;
+    }
+
+    .btn-color-group .btn-color-1 {
+        background-color: #6d816f;
+        color: #131313;
+
+    }
+    .btn-color-group .btn-color-2 {
+        background-color: #7d7567;
+        color: #DDDDDD;
+    }
+    .btn-color-group .btn-color-3 {
+        background-color: #7a7f6f;
+        color: #DDDDDD;
+    }
+    .btn-color-group .btn-color-4 {
+        background-color: #817f79;
+        color: #ffffff;
+    }
+    .btn-color-group .btn-color-5 {
+        background-color: #1d2c29;
+        color: #DDDDDD;
+    }
+
+    .btn-color-group .btn-color-6 {
+        background-color: #16211c;
+        color: #aeaeae;
+
+    }
+
+    .btn-color-group .btn-color-7 {
+        background-color: #161c27;
+        color: #838383;
+    }
+
+    .btn-color-group .btn-color-8 {
+        background-color: #322319;
+        color: #949494;
     }
 </style>
