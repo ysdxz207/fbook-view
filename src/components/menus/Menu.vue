@@ -1,6 +1,7 @@
 <template xmlns:v-bind="http://www.w3.org/1999/xhtml">
     <transition v-bind:name="menuOption.transition">
         <div class="menu-f" v-show="menuOption.isShowMenu">
+            <div class="menu-mask" @click="toggleMenu()"></div>
             <div class="menu-bar menu-header">
                 <template>
                     <button class="button button-icon" @click="onBackClick()">
@@ -129,6 +130,9 @@
                 popup.show().then((buttonIndex) => {
                     console.log(buttonIndex)
                 })
+            },
+            toggleMenu() {
+                this.menuOption.isShowMenu = !this.menuOption.isShowMenu;
             }
 
         }
@@ -136,6 +140,14 @@
 </script>
 
 <style scoped lang='scss'>
+    .menu-mask {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        opacity: 0;
+    }
     .menu-f {
         width: 100%;
         height: 100%;
@@ -178,14 +190,18 @@
 
     .btn-prev-chapter {
         position: absolute;
-        top: 8px;
+        top: 0px;
         left: 8px;
+        line-height: 30px;
+        height: 30px;
     }
 
     .btn-next-chapter {
         position: absolute;
-        top: 8px;
+        top: 0px;
         right: 8px;
+        line-height: 30px;
+        height: 30px;
     }
 
     .btn-font {
