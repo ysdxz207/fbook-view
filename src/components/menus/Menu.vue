@@ -20,7 +20,7 @@
                             <div class="btn-next-chapter" @click="menuOption.nextChapter">下一章</div>
                         </div>
                         <button class="button-icon btn-toggle" @click="showToggleOperate()">
-                            <span><i class="icon ion-ios-toggle"></i></span>
+                            <span style="font-size: 24px;color: #FFFFFF;font-weight: bold" v-text="bookReadSetting.pageMethod">⇄</span>
                         </button>
                         <button class="button-icon btn-chapters" @click="toggleMenuChapterList()">
                             <span><i class="icon ion-navicon-round"></i></span>
@@ -37,7 +37,6 @@
     </transition>
 </template>
 <script>
-
     import Sidebar from '../utils/Sidebar.vue'
     import MenuChapterList from '../menus/MenuChapterList.vue'
 
@@ -73,8 +72,9 @@
                     sidebarComponent: MenuChapterList
 
                 },
-                operationOptions: ['上下', '左右'],
-                operationModal: 0
+                bookReadSetting: {
+                    pageMethod: '⇄'
+                }
             }
         },
         created() {
@@ -89,6 +89,9 @@
                 _this.menuOption.isShowMenu = !_this.menuOption.isShowMenu;
             });
 
+            _this.bus.$on('readConfig', function (bookReadSetting) {
+                _this.bookReadSetting = bookReadSetting;
+            });
 
         },
         mounted() {
@@ -117,19 +120,13 @@
                 this.sidebarOptions.isShowSidebar = !this.sidebarOptions.isShowSidebar;
             },
             showToggleOperate() {
-                let options = {
-                    effect: 'scale',
-                    title: '',
-                    buttons: [],
-                    showClose: true,
-                    components: {
-
-                    }
+                if (this.bookReadSetting.pageMethod == '⇄') {
+                    this.bookReadSetting.pageMethod = '⇅';
+                } else {
+                    this.bookReadSetting.pageMethod = '⇄';
                 }
-                let popup = $popup.fromTemplate('<von-radio :options="operationOptions" v-model="operationModel"></von-radio>', options)
-                popup.show().then((buttonIndex) => {
-                    console.log(buttonIndex)
-                })
+
+                this.bus.$emit('readConfigFeedback', this.bookReadSetting);
             },
             toggleMenu() {
                 this.menuOption.isShowMenu = !this.menuOption.isShowMenu;

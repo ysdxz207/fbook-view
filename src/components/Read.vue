@@ -34,6 +34,9 @@
                 _this.readContentObject = document.querySelector('.page-content');
                 _this.readContentObject.scrollTop = 0;
             });
+            _this.bus.$on('readConfigFeedback', function (bookReadSetting) {
+                _this.bookData.bookReadSetting = bookReadSetting;
+            })
         },
         data() {
             let _this = this;
@@ -65,8 +68,7 @@
                         lineHeight: '24px',
                         backgroundColor: '#6d816f',
                         padding: '0px'
-                    },
-                    pageMethod: 'left-right'
+                    }
                 },
                 menuOption: {
                     transition: 'fade',
@@ -93,6 +95,7 @@
 //                    chapterInfo.chapter.content = '';
                     _this.bookData = chapterInfo;
                     _this.bus.$emit('chapterList', chapterInfo.bookChapters);
+                    _this.bus.$emit('readConfig', chapterInfo.bookReadSetting);
                     //滚动到顶部
                     _this.bus.$emit('readScrollTop');
 
@@ -108,13 +111,11 @@
             },
             touchReadContent(e) {
                 let _this = this;
-                let readConfig = _this.readConfig;
+                let readConfig = _this.bookData.bookReadSetting;
                 let scrollTop = _this.readContentObject.scrollTop;
                 let windowHeight = window.innerHeight;
                 let documentHeight = document.innerHeight;
 
-
-                var delay = 10;
                 var lineHeight = parseInt(_this.readConfig.readContentStyle.lineHeight);
                 var isTop = scrollTop < 10;
                 var isBottom = (documentHeight -
@@ -122,11 +123,11 @@
 
                 var tapX = e.clientX;
                 var tapY = e.clientY;
-                var tap = readConfig.pageMethod == "left-right" ? tapX : tapY;
+                var tap = readConfig.pageMethod == "⇄" ? tapX : tapY;
 
                 var width = screen.width;
                 var height = screen.height;
-                var widthOrHeight = readConfig.pageMethod == "left-right" ? width : height;
+                var widthOrHeight = readConfig.pageMethod == "⇄" ? width : height;
 
                 //点击屏幕中央唤起菜单
                 if (tap < (widthOrHeight / 3 * 2) && tap > (widthOrHeight / 3 * 1)) {
