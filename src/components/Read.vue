@@ -5,7 +5,7 @@
             <div class="text-center read-content"
                  v-bind:style="readConfig.readContentStyle"
                  v-html="bookData.chapter.content"
-                @click="toggleMenu()">
+                @click="touchReadContent()">
 
             </div>
         </div>
@@ -31,7 +31,7 @@
                 _this.bookData = chapterInfo;
             });
             _this.bus.$on('readScrollTop', function () {
-                document.querySelector('.page-content').scrollTop = 0;
+                this.readContentObject.scrollTop = 0;
             });
         },
         data() {
@@ -64,7 +64,8 @@
                         lineHeight: '24px',
                         backgroundColor: '#6d816f',
                         padding: '0px'
-                    }
+                    },
+                    pageMethod: 1
                 },
                 menuOption: {
                     transition: 'fade',
@@ -76,7 +77,8 @@
                     },
                     isShowMenu: false
                 },
-                chapterList: []
+                chapterList: [],
+                readContentObject: document.querySelector('.page-content')
             }
         },
         methods: {
@@ -102,7 +104,52 @@
             },
             toggleMenu() {
                 this.$refs.menu.$emit('toggle');
-                console.log('scroll')
+            },
+            touchReadContent() {
+                let _this = this;
+                let readConfig = _this.readConfig;
+                let scrollTop = _this.readContentObject.scrollTop;
+
+
+                var delay = 10;
+                var lineHeight = 28;
+                var isTop = $(document).scrollTop() < 10;
+                var isBottom = ($(document).height() -
+                    ($(window).height() + $(document).scrollTop())) == 0;
+
+                var tapX = e.clientX;
+                var tapY = e.clientY;
+                var tap = pageMethod == "1" ? tapY : tapX;
+
+                var width = screen.width;
+                var height = screen.height;
+                var widthOrHeight = pageMethod == "1" ? height : width;
+
+                //点击屏幕中央唤起菜单
+                if (tap < (widthOrHeight / 3 * 2) && tap > (widthOrHeight / 3 * 1)) {
+                    bookMenu.toggle();
+                    return;
+                }
+
+                if (bookMenu.isShow()) {
+                    return;
+                }
+
+                if ((tap > (widthOrHeight / 3 * 2))
+                    && !isBottom) {
+                    //向下滚动
+                    $('html,body')
+                        .animate({scrollTop: $(document).scrollTop() + height - lineHeight}, delay);
+                    return;
+                }
+
+                if (tap < (widthOrHeight / 3 * 1)
+                    && !isTop) {
+                    //向上滚动
+                    $('html,body')
+                        .animate({scrollTop: $(document).scrollTop() - height + lineHeight}, delay);
+                    return;
+                }
 
             }
         }
