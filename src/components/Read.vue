@@ -1,9 +1,9 @@
 <template xmlns:v-bind="http://www.w3.org/1999/xhtml">
     <div class="page" v-nav="{hideNavbar: true}">
-        <div class="page-content" v-bind:style="readConfig.readContentStyle">
+        <div class="page-content" v-bind:style="readConfig.readMainStyle">
             <p class="title" v-text="bookData.chapter.title"></p>
             <div class="text-center read-content"
-                 v-bind:style="readConfig.lineHeight"
+                 v-bind:style="readConfig.readContentStyle"
                  v-html="bookData.chapter.content"
                 @click="touchReadContent($event)">
 
@@ -37,8 +37,11 @@
             _this.bus.$on('readConfigFeedback', function (bookReadSetting) {
                 _this.bookData.bookReadSetting = bookReadSetting;
                 //更新内容样式
-                _this.readConfig.readContentStyle.backgroundColor = bookReadSetting.bgColor;
-                _this.readConfig.readContentStyle.color = bookReadSetting.color;
+                _this.readConfig.readMainStyle.backgroundColor = bookReadSetting.bgColor;
+                _this.readConfig.readMainStyle.color = bookReadSetting.color;
+                _this.readConfig.readContentStyle.lineHeight = parseInt(bookReadSetting.lineHeight) + 'px';
+                _this.readConfig.readContentStyle.fontSize = parseInt(bookReadSetting.fontSize) + 'px';
+
             })
         },
         data() {
@@ -66,13 +69,14 @@
                         backgroundColor: '#6d816f',
                         margin: '0px'
                     },
-                    readContentStyle: {
-                        fontSize: '20px',
+                    readMainStyle: {
                         backgroundColor: '#6d816f',
                         color: '#dddddd',
-                        padding: '0px'
                     },
-                    lineHeight: '28px'
+                    readContentStyle: {
+                        fontSize: '20px',
+                        lineHeight: '28px'
+                    }
                 },
                 menuOption: {
                     transition: 'fade',
@@ -93,11 +97,10 @@
                 let _this = this;
                 _this.bookData = chapterInfo;
                 //设置样式
-                console.log(chapterInfo.bookReadSetting)
-                _this.readConfig.readContentStyle.backgroundColor = chapterInfo.bookReadSetting.bgColor;
-                _this.readConfig.readContentStyle.fontSize = chapterInfo.bookReadSetting.fontSize;
-                _this.readConfig.readContentStyle.color = chapterInfo.bookReadSetting.color;
-                _this.readConfig.lineHeight = chapterInfo.bookReadSetting.lineHeight;
+                _this.readConfig.readMainStyle.backgroundColor = chapterInfo.bookReadSetting.bgColor;
+                _this.readConfig.readMainStyle.color = chapterInfo.bookReadSetting.color;
+                _this.readConfig.readContentStyle.fontSize = parseInt(chapterInfo.bookReadSetting.fontSize) + 'px';
+                _this.readConfig.readContentStyle.lineHeight = parseInt(chapterInfo.bookReadSetting.lineHeight) + 'px';
             },
             loadChapter(direction) {
                 let _this = this;

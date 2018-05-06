@@ -35,15 +35,34 @@
                 <div class="menu-bar menu-font-setting"
                     v-show="isShowFontSetting">
                     <template>
-                        <section class="btn-color-group">
-                            <button class="btn btn-color-1" @click="changeBGColor($event)"></button>
-                            <button class="btn btn-color-2" @click="changeBGColor($event)"></button>
-                            <button class="btn btn-color-3" @click="changeBGColor($event)"></button>
-                            <button class="btn btn-color-4" @click="changeBGColor($event)"></button>
-                            <button class="btn btn-color-5" @click="changeBGColor($event)"></button>
-                            <button class="btn btn-color-6" @click="changeBGColor($event)"></button>
-                            <button class="btn btn-color-7" @click="changeBGColor($event)"></button>
-                            <button class="btn btn-color-8" @click="changeBGColor($event)"></button>
+                        <section>
+                            <div class="btn-color-group">
+                                <button class="btn btn-color-1" @click="changeBGColor($event)"></button>
+                                <button class="btn btn-color-2" @click="changeBGColor($event)"></button>
+                                <button class="btn btn-color-3" @click="changeBGColor($event)"></button>
+                                <button class="btn btn-color-4" @click="changeBGColor($event)"></button>
+                                <button class="btn btn-color-5" @click="changeBGColor($event)"></button>
+                                <button class="btn btn-color-6" @click="changeBGColor($event)"></button>
+                                <button class="btn btn-color-7" @click="changeBGColor($event)"></button>
+                                <button class="btn btn-color-8" @click="changeBGColor($event)"></button>
+                            </div>
+
+                            <von-range
+                                    v-model="bookReadSetting.fontSize"
+                                    :min="minFontSize"
+                                    :max="maxFontSize"
+                            >
+                                <i slot="text-left" style="font-size: 12px">A</i>
+                                <i slot="text-right" style="font-size: 28px">A</i>
+                            </von-range>
+                            <von-range
+                                    v-model="bookReadSetting.lineHeight"
+                                    :min="minLineHeight"
+                                    :max="maxLineHeight"
+                            >
+                                <i slot="text-left" class="icon ion-navicon" style="font-size: 12px"></i>
+                                <i slot="text-right" class="icon ion-navicon" style="font-size: 28px"></i>
+                            </von-range>
                         </section>
                     </template>
                 </div>
@@ -79,6 +98,12 @@
             'modal-chapter-list': MenuChapterList
         },
         updated() {
+            this.minLineHeight = this.bookReadSetting.fontSize;
+            this.bookReadSetting.lineHeight = this.bookReadSetting.lineHeight < this.minLineHeight ? this.minLineHeight : this.bookReadSetting.lineHeight;
+
+            console.log(this.minLineHeight < this.bookReadSetting.fontSize)
+            this.bus.$emit('readConfigFeedback', this.bookReadSetting);
+            this.saveReadSetting(this.bookReadSetting);
         },
         data() {
             let _this = this;
@@ -90,9 +115,17 @@
 
                 },
                 bookReadSetting: {
-                    pageMethod: '⇄'
+                    pageMethod: '⇄',
+                    lineHeight: 20,
+                    fontSize: 20,
+                    bgColor: '#6d816f',
+                    color: '#131313'
                 },
-                isShowFontSetting: false
+                isShowFontSetting: false,
+                minLineHeight: 20,
+                maxLineHeight: 40,
+                minFontSize: 14,
+                maxFontSize: 40
             }
         },
         created() {
@@ -138,15 +171,8 @@
                 this.sidebarOptions.isShowSidebar = !this.sidebarOptions.isShowSidebar;
             },
             showToggleOperate() {
-                if (this.bookReadSetting.pageMethod == '⇄') {
-                    this.bookReadSetting.pageMethod = '⇅';
-                } else {
-                    this.bookReadSetting.pageMethod = '⇄';
-                }
-
-                this.bus.$emit('readConfigFeedback', this.bookReadSetting);
-
-                this.saveReadSetting(this.bookReadSetting);
+                this.bookReadSetting.pageMethod = his.bookReadSetting.pageMethod == '⇄' ?
+                    '⇅' : '⇄';
             },
             toggleMenu() {
                 if (this.isShowFontSetting) {
@@ -173,7 +199,7 @@
     }
 </script>
 
-<style scoped lang='scss'>
+<style lang='scss'>
     .menu-mask {
         width: 100%;
         height: 100%;
@@ -206,7 +232,7 @@
         bottom: 0px;
     }
     .menu-font-setting {
-        height: 100px;
+        height: 136px;
         bottom: 0px;
         z-index: 1;
     }
@@ -310,5 +336,15 @@
     .btn-color-group .btn-color-8 {
         background-color: #322319;
         color: #949494;
+    }
+
+    /*滑块*/
+    .range.range-assertive {
+        background-color: #101010;
+        color: #FFFFFF;
+        height: 40px;
+    }
+    .range .hairline-bottom:after, .range .hairline-top:before {
+        height: 0px;
     }
 </style>
