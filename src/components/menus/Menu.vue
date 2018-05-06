@@ -101,7 +101,6 @@
             this.minLineHeight = this.bookReadSetting.fontSize;
             this.bookReadSetting.lineHeight = this.bookReadSetting.lineHeight < this.minLineHeight ? this.minLineHeight : this.bookReadSetting.lineHeight;
 
-            console.log(this.minLineHeight < this.bookReadSetting.fontSize)
             this.bus.$emit('readConfigFeedback', this.bookReadSetting);
             this.saveReadSetting(this.bookReadSetting);
         },
@@ -171,7 +170,7 @@
                 this.sidebarOptions.isShowSidebar = !this.sidebarOptions.isShowSidebar;
             },
             showToggleOperate() {
-                this.bookReadSetting.pageMethod = his.bookReadSetting.pageMethod == '⇄' ?
+                this.bookReadSetting.pageMethod = this.bookReadSetting.pageMethod == '⇄' ?
                     '⇅' : '⇄';
             },
             toggleMenu() {
@@ -293,7 +292,7 @@
         text-align: center;
     }
     .btn {
-        border-radius: 12px;
+        border-radius: 50%;
         height:  24px;
         width: 24px;
         border: 0px;
