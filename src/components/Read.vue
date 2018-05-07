@@ -1,7 +1,7 @@
 <template xmlns:v-bind="http://www.w3.org/1999/xhtml">
     <div class="page" v-nav="{hideNavbar: true}">
         <div class="page-content" v-bind:style="readConfig.readMainStyle">
-            <p class="title" v-text="bookData.chapter.title"></p>
+            <p class="title" v-text="bookData.chapter.title" :style="'height: ' + readConfig.readContentStyle.lineHeight"></p>
             <div class="text-center read-content"
                  v-bind:style="readConfig.readContentStyle"
                  v-html="bookData.chapter.content"
@@ -132,7 +132,7 @@
                 let readConfig = _this.bookData.bookReadSetting;
                 let scrollTop = _this.readContentObject.scrollTop;
                 let windowHeight = window.innerHeight;
-                let documentHeight = document.innerHeight;
+                let documentHeight = _this.readContentObject.scrollHeight;
 
                 var lineHeight = parseInt(_this.readConfig.readContentStyle.lineHeight);
                 var isTop = scrollTop < 10;
@@ -152,18 +152,32 @@
                     _this.toggleMenu();
                     return;
                 }
+                console.log('documentHeight',documentHeight)
+                console.log('windowHeight',windowHeight)
+                console.log('lineHeight',lineHeight)
 
                 if ((tap > (widthOrHeight / 3 * 2))
                     && !isBottom) {
                     //向下滚动
-                    _this.scrollTo(_this.readContentObject, scrollTop + height - lineHeight, 100);
+                    let willScrollTo = scrollTop + height;
+
+                    console.log('前',willScrollTo)
+                    let beishu = parseInt((documentHeight - willScrollTo - windowHeight) / lineHeight);
+                    willScrollTo = documentHeight - beishu * lineHeight - windowHeight;
+
+                    console.log('后',willScrollTo)
+                    _this.scrollTo(_this.readContentObject, willScrollTo, 30);
                     return;
                 }
 
                 if (tap < (widthOrHeight / 3 * 1)
                     && !isTop) {
                     //向上滚动
-                    _this.scrollTo(_this.readContentObject, scrollTop - height + lineHeight, 100);
+                    let willScrollTo = scrollTop - height + lineHeight;
+                    let beishu = parseInt((documentHeight - willScrollTo - windowHeight) / lineHeight);
+                    willScrollTo = documentHeight - beishu * lineHeight - windowHeight;
+
+                    _this.scrollTo(_this.readContentObject, willScrollTo, 30);
                     return;
                 }
 
