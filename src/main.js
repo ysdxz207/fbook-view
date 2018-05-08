@@ -219,6 +219,7 @@ Vue.prototype.getChapterInfo = function (args, callback) {
     }
 
     params.bookId = args.bookId;
+    params.preLoad = args.preLoad;
 
     _this.ajax({
         method: 'post',

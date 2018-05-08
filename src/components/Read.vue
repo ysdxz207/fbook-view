@@ -24,7 +24,7 @@
             'v-menu': menu
         },
         mounted() {
-            this.loadChapter(0);
+            this.loadChapter(0, false);
         },
         created() {
             let _this = this;
@@ -82,10 +82,10 @@
                 menuOption: {
                     transition: 'fade',
                     prevChapter: function() {
-                        _this.loadChapter(-1);
+                        _this.loadChapter(-1, false);
                     },
                     nextChapter: function() {
-                        _this.loadChapter(1)
+                        _this.loadChapter(1, false)
                     },
                     isShowMenu: false
                 },
@@ -103,12 +103,13 @@
                 _this.readConfig.readContentStyle.fontSize = parseInt(chapterInfo.bookReadSetting.fontSize) + 'px';
                 _this.readConfig.readContentStyle.lineHeight = parseInt(chapterInfo.bookReadSetting.lineHeight) + 'px';
             },
-            loadChapter(direction) {
+            loadChapter(direction, preload) {
                 let _this = this;
                 _this.getChapterInfo({
                     bookId: _this.bookData.book.id,
                     lastReadingChapterNum: _this.bookData.bookRead.lastReadingChapterNum,
-                    direction: direction
+                    direction: direction,
+                    preLoad: preload
                 }, function(chapterInfo) {
 //                    chapterInfo.chapter.content = '';
                     _this.loadReadSetting(chapterInfo);
