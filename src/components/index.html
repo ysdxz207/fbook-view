@@ -40,17 +40,20 @@ Sure :: I'll put the example in my original post :: – John Ruiz Feb 16 '12 at 
 </div>
 </body>
 <script>
-var p1 = $('#cont1 p');
-var p1Height = p1.height();
+    var cont1Height = document.querySelector('#cont1').offsetHeight;
+var p1 = document.querySelector('#cont1 p');
+var p1Height = p1.offsetHeight;
 
-var p2 = $('#cont2 p');
+var p2 = document.querySelector('#cont2 p');
 
 //get text and explode it as an array
-var p1text = p1.text();
+var p1text = p1.innerText;
 p1text = p1text.split('');
 
 //prepare p2 text
-p2text = [];
+var p2text = [];
+var lastChar = '';
+var p1temp = '';
 
 //if greater height
 while (p1Height > cont1Height) {
@@ -65,15 +68,15 @@ while (p1Height > cont1Height) {
     p1temp = p1text.join('');
 
     //place back to p1
-    p1.text(p1temp);
+    p1.innerText = p1temp;
 
     //re-evaluate height
-    p1Height = p1.height();
+    p1Height = p1.offsetHeight;
 
     //loop
 }
 
 //if less than, assemble p2 text and render to p2 container
-p2.text(p2text.join(''));
+p2.innerText = p2text.join('');
 </script>
 </html>
