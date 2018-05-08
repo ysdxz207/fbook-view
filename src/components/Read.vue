@@ -160,7 +160,7 @@
                 if ((tap > (widthOrHeight / 3 * 2))
                     && !isBottom) {
                     //向下滚动
-                    let willScrollTo = scrollTop + height;
+                    let willScrollTo = scrollTop + height - lineHeight;
 
 //                    console.log('前',willScrollTo)
 //                    let beishu = parseInt((documentHeight - willScrollTo - windowHeight) / lineHeight);

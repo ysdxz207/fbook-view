@@ -100,9 +100,6 @@
         updated() {
             this.minLineHeight = this.bookReadSetting.fontSize;
             this.bookReadSetting.lineHeight = this.bookReadSetting.lineHeight < this.minLineHeight ? this.minLineHeight : this.bookReadSetting.lineHeight;
-
-            this.bus.$emit('readConfigFeedback', this.bookReadSetting);
-            this.saveReadSetting(this.bookReadSetting);
         },
         data() {
             let _this = this;
@@ -141,14 +138,18 @@
 
             _this.bus.$on('readConfig', function (bookReadSetting) {
                 _this.bookReadSetting = bookReadSetting;
+                //初始化数据不监听变化(第一次加载到后台配置不保存)
+                _this.$watch('bookReadSetting', {
+                    deep: true,
+                    handler: function () {
+                        _this.feedBackAndSaveReadSetting()
+                    }
+                })
             });
 
         },
         mounted() {
             let _this = this;
-        },
-        destroyed() {
-            $sidebar.destroy()
         },
         methods: {
             onBackClick() {
@@ -190,6 +191,9 @@
                 color = color.colorHex();
                 this.bookReadSetting.bgColor = backgroundColor;
                 this.bookReadSetting.color = color;
+
+            },
+            feedBackAndSaveReadSetting() {
                 this.bus.$emit('readConfigFeedback', this.bookReadSetting);
                 this.saveReadSetting(this.bookReadSetting);
             }
