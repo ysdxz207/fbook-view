@@ -162,11 +162,11 @@
                     //向下滚动
                     let willScrollTo = scrollTop + height;
 
-                    console.log('前',willScrollTo)
-                    let beishu = parseInt((documentHeight - willScrollTo - windowHeight) / lineHeight);
-                    willScrollTo = documentHeight - beishu * lineHeight - windowHeight;
+//                    console.log('前',willScrollTo)
+//                    let beishu = parseInt((documentHeight - willScrollTo - windowHeight) / lineHeight);
+//                    willScrollTo = documentHeight - beishu * lineHeight - windowHeight;
 
-                    console.log('后',willScrollTo)
+//                    console.log('后',willScrollTo)
                     _this.scrollTo(_this.readContentObject, willScrollTo, 30);
                     return;
                 }

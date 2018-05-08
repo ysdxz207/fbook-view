@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+	<style>
+	#cont1{
+    height:100px;
+    width:100px;
+    margin-bottom:10px;
+    padding:0px;
+    border: 1px solid #b9e5dd;
+}
+#cont2{
+    height:100px;
+    width:100px;
+    margin-bottom:10px;
+    padding:0px;
+    border: 1px solid #878d91;
+}
+</style>
+</head>
+<body>
+<div id="cont1">
+    <p>jquery html css
+shareimprove this question
+edited Feb 16 '12 at 5:55
+asked Feb 16 '12 at 3:36
+
+John Ruiz
+6517
+Can you show an example? Code? An image? I can't picture your concept. – elclanrs Feb 16 '12 at 3:40 
+Imagine this is a div: |text|. Do you want something like |long content| <other stuff> |overflow of long content|? – Tikhon Jelvis Feb 16 '12 at 3:45 
+Sure :: I'll put the example in my original post :: – John Ruiz Feb 16 '12 at 3:52
+@JohnRuiz Looking for something like same solution. Did you find proper solution with best performance ? – Gitesh Purbia Jan 17 '17 at 5:55
+@GiteshPurbia sorry for taking a while to reply. This question is actually 5+ years old, so I would suggest that any solution I acquired can probably be replaced with something more contemporary? – John Ruiz Mar 17 '17 </p>
+</div>
+<div id="cont2">
+    <p><!-- future content --></p>
+</div>
+</body>
+<script>
+var p1 = $('#cont1 p');
+var p1Height = p1.height();
+
+var p2 = $('#cont2 p');
+
+//get text and explode it as an array
+var p1text = p1.text();
+p1text = p1text.split('');
+
+//prepare p2 text
+p2text = [];
+
+//if greater height
+while (p1Height > cont1Height) {
+
+    //remove last character
+    lastChar = p1text.pop();
+
+    //prepend to p2 text
+    p2text.unshift(lastChar);
+
+    //reassemble p1 text
+    p1temp = p1text.join('');
+
+    //place back to p1
+    p1.text(p1temp);
+
+    //re-evaluate height
+    p1Height = p1.height();
+
+    //loop
+}
+
+//if less than, assemble p2 text and render to p2 container
+p2.text(p2text.join(''));
+</script>
+</html>
