@@ -1,24 +1,14 @@
 <template xmlns:v-bind="http://www.w3.org/1999/xhtml">
     <div class="page" v-nav="{hideNavbar: true}">
         <div class="page-content" v-bind:style="readConfig.readMainStyle">
-            <article class="text-center read-content"
+            <p class="title" v-text="bookData.chapter.title" :style="'height: ' + readConfig.readContentStyle.lineHeight"></p>
+            <div class="text-center read-content"
                  v-bind:style="readConfig.readContentStyle"
                  v-html="bookData.chapter.content"
                  @click="touchReadContent($event)"
-                 @touchstart="touchEndPrevent($event)"
-                v-show="currentPage == 1">
-                <p class="title" v-text="bookData.chapter.title" :style="'height: ' + readConfig.readContentStyle.lineHeight"></p>
+                 @touchstart="touchEndPrevent($event)">
 
-            </article>
-
-            <transition name="fade" v-for="n in 40">
-            <div class="region"
-                 v-bind:class="'region-' + (n + 1)"
-                 v-show="currentPage == (n + 1)"
-                 v-bind:style="readConfig.readContentStyle"
-                 @click="touchReadContent($event)"
-                 @touchstart="touchEndPrevent($event)"></div>
-            </transition>
+            </div>
         </div>
         <v-menu :menuOption="menuOption"
                 ref="menu"></v-menu>
@@ -53,8 +43,7 @@
                 _this.readConfig.readContentStyle.lineHeight = parseInt(bookReadSetting.lineHeight) + 'px';
                 _this.readConfig.readContentStyle.fontSize = parseInt(bookReadSetting.fontSize) + 'px';
 
-            });
-
+            })
         },
         data() {
             let _this = this;
@@ -101,8 +90,7 @@
                     isShowMenu: false
                 },
                 chapterList: [],
-                readContentObject: undefined,
-                currentPage: 1
+                readContentObject: undefined
             }
         },
         methods: {
@@ -145,9 +133,12 @@
                 let readConfig = _this.bookData.bookReadSetting;
                 let scrollTop = _this.readContentObject.scrollTop;
                 let windowHeight = window.innerHeight;
+                let documentHeight = _this.readContentObject.scrollHeight;
 
-                var isTop = _this.currentPage == 1;
-                var isBottom = false;
+                var lineHeight = parseInt(_this.readConfig.readContentStyle.lineHeight);
+                var isTop = scrollTop < 10;
+                var isBottom = (documentHeight -
+                    (windowHeight + scrollTop)) == 0;
 
                 var tapX = e.clientX;
                 var tapY = e.clientY;
@@ -162,21 +153,33 @@
                     _this.toggleMenu();
                     return;
                 }
+                console.log('documentHeight',documentHeight)
+                console.log('windowHeight',windowHeight)
+                console.log('lineHeight',lineHeight)
 
                 if ((tap > (widthOrHeight / 3 * 2))
                     && !isBottom) {
-                    //下一页
-                    _this.currentPage += 1;
-                    console.log(_this.currentPage)
+                    //向下滚动
+                    let willScrollTo = scrollTop + height;
+
+//                    console.log('前',willScrollTo)
+//                    let beishu = parseInt((documentHeight - willScrollTo - windowHeight) / lineHeight);
+//                    willScrollTo = documentHeight - beishu * lineHeight - windowHeight;
+
+//                    console.log('后',willScrollTo)
+                    _this.scrollTo(_this.readContentObject, willScrollTo, 30);
                     return;
                 }
 
                 if (tap < (widthOrHeight / 3 * 1)
                     && !isTop) {
-                    //上一页
-                    _this.currentPage -= 1;
-                    console.log(_this.currentPage)
-                     return;
+                    //向上滚动
+                    let willScrollTo = scrollTop - height + lineHeight;
+                    let beishu = parseInt((documentHeight - willScrollTo - windowHeight) / lineHeight);
+                    willScrollTo = documentHeight - beishu * lineHeight - windowHeight;
+
+                    _this.scrollTo(_this.readContentObject, willScrollTo, 30);
+                    return;
                 }
 
             },
@@ -187,23 +190,12 @@
     }
 </script>
 <style lang="scss">
-    @import "../assets/scss/transition.scss";
 
-    article.read-content {
-        width: 100%;
-        height: 100%;
-        -webkit-flow-into: articles;
-        flow-into: articles;
+    .read-content {
+        min-height: 100%;
     }
     .read-content p {
         padding: 0px;
         margin: 0px;
-    }
-
-    div.region {
-        -webkit-flow-from: articles;
-        flow-from: articles;
-        height: 100%;
-        width: 100%;
     }
 </style>
