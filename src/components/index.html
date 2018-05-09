@@ -11,6 +11,8 @@
         margin-bottom:10px;
         padding:0px;
         border: 1px solid #878d91;
+        line-height: 28px;
+        font-size: 28px;
     }
     </style>
 </head>
@@ -99,73 +101,104 @@
 </body>
 <script>
 
-    var promise = new Promise(function(resolve, reject) {
-        var ok = false;
-
-
-        if (ok){
-            resolve(value);
-        } else {
-            reject(error);
-        }
-    });
-
     var container = document.querySelector('.container');
+    var windowWidth = 300;
     var windowHeight = 512;
-    var textContent = document.querySelector('.text-content');
-    var textContentText = textContent.innerText;
+    var lineHeight = 28;
+    var fontSize = 28;
 
+    var textContentSource = document.querySelector('.text-content');
 
     function splitScreenPage(textContent) {
-        var textContentHeight = textContent.offsetHeight;
+        var textContentText = textContent.innerText;
 
-        if (textContentHeight < windowHeight) {
-            return textContent;
-        }
 
+        //计算一页大概多少字
+        var wordsNum = parseInt((windowWidth * windowHeight) / (lineHeight * fontSize)) - 30;
+
+        //剩余内容
+        var textContentTextLast = textContentText.substring(wordsNum);
+
+        //截取相对第一页大概的内容并赋值给原元素
+        textContentText = textContentText.substring(0,wordsNum);
+        textContent.innerText = textContentText;
+       //拆分原元素内容为数组
+        textContentText = textContentText.split('');
+        //拆分剩下元素内容为数组
+        textContentTextLast = textContentTextLast.split('');
+
+
+        //创建新元素
         var textContentAppend = document.createElement('div');
+        //新元素添加class
         textContentAppend.classList.add('text-content');
 
-        textContentText = textContentText.split('');
-
-        var textContentAppendText = [];
-        var lastChar = '';
-        var textContentTemp = '';
-
-        while (textContentHeight > windowHeight) {
-
-            //remove last character
-            lastChar = textContentText.pop();
-
-            //prepend to p2 text
-            textContentAppendText.unshift(lastChar);
-
-            //reassemble p1 text
-            textContentTemp = textContentText.join('');
-
-            //place back to p1
-            textContent.innerText = textContentTemp;
-
-            //re-evaluate height
-            textContentHeight = textContent.offsetHeight;
-
-            //loop
-        }
-
-//if less than, assemble p2 text and render to p2 container
-        textContentAppend.innerText = textContentAppendText.join('');
-
-        //重新设置值
-        textContentText = textContentAppend.innerText;
-        textContent = textContentAppend;
-        container.appendChild(textContentAppend);
-
-        return splitScreenPage();
+        //判断是否超出或没满框
+        return assembleText(textContentText,
+            textContentTextLast,
+            textContent,
+            textContentAppend);
 
     }
+    function assembleText(textContentText,
+                          textContentTextLast,
+                          textContent,
+                          textContentAppend) {
+        var isOverFlow = textContent.offsetHeight > windowHeight;
+        var loop = true;
+        var char = '';
+        var textContentTemp = '';
+        var textContentAppendText = [];
 
-    splitScreenPage(textContent)
+        while (loop) {
+            if (isOverFlow) {
+                //移除最后一个字符
+                char = textContentText.pop();
+                //准备把最后一个字符赋值给新元素
+                textContentAppendText.unshift(char);
+            } else {
+                //移除剩余内容的第一个字符
+                char = textContentTextLast.shift();
+                //剩余内容的第一个字符赋值给原元素
+                textContentText.push(char);
+            }
 
+            //重新组装新原元素内容
+            textContentTemp = textContentText.join('');
+            //组装后内容赋值给第一个元素
+            textContent.innerText = textContentTemp;
+            //更新溢出状态
+            if (isOverFlow) {
+                loop = textContent.offsetHeight > windowHeight;
+            } else {
+                loop = textContent.offsetHeight < windowHeight;
+            }
+        }
+
+        if (isOverFlow) {
+            textContentAppend.innerText = textContentAppendText.join('') + textContentTextLast.join('');
+        } else {
+            //因为多加了一个字符，所以要减掉
+            textContentText = textContent.innerText.split('');
+            var overChar = textContentText.pop();
+            textContent.innerText = textContentText.join('');
+            textContentTextLast.unshift(overChar);
+            //刚好满框或大于框了就把剩余内容赋值给新元素
+            textContentAppend.innerText = textContentTextLast.join('');
+        }
+
+
+        return textContentAppend;
+    }
+
+    var newContent = splitScreenPage(textContentSource);
+
+    container.appendChild(newContent);
+
+    while (newContent.offsetHeight > windowHeight) {
+        newContent = splitScreenPage(newContent);
+        container.appendChild(newContent);
+    }
 
 </script>
 </html>
