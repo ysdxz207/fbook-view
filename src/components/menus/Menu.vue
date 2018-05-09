@@ -203,6 +203,7 @@
 </script>
 
 <style lang='scss'>
+    @import '../../assets/scss/transition.scss';
     .menu-mask {
         width: 100%;
         height: 100%;
@@ -244,13 +245,7 @@
         color: #DDDDDD;
     }
 
-    .fade-enter-active, .fade-leave-active {
-        transition: opacity .3s;
-    }
 
-    .fade-enter, .fade-leave-to {
-        opacity: 0;
-    }
 
     .pull-right {
         float: right;

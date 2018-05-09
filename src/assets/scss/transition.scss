@@ -115,3 +115,13 @@ $ios-transition-timing-function: cubic-bezier(.36, .66, .04, 1) !default;
   opacity: 1;
   z-index: 100;
 }
+
+/* fade */
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .3s;
+}
+
+.fade-enter, .fade-leave-to {
+  opacity: 0;
+}
+/* fade end */

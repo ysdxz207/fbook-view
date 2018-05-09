@@ -11,15 +11,14 @@
 
             </article>
 
-            <transition name="slide-left">
-            <div class="region" v-for="n in 40"
+            <transition name="fade" v-for="n in 40">
+            <div class="region"
                  v-bind:class="'region-' + (n + 1)"
                  v-show="currentPage == (n + 1)"
                  v-bind:style="readConfig.readContentStyle"
                  @click="touchReadContent($event)"
                  @touchstart="touchEndPrevent($event)"></div>
             </transition>
-
         </div>
         <v-menu :menuOption="menuOption"
                 ref="menu"></v-menu>
