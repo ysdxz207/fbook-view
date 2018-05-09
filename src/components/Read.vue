@@ -2,12 +2,15 @@
     <div class="page" v-nav="{hideNavbar: true}">
         <div class="page-content" v-bind:style="readConfig.readMainStyle">
             <p class="title" v-text="bookData.chapter.title" :style="'height: ' + readConfig.readContentStyle.lineHeight"></p>
-            <div class="text-center read-content"
+            <div class="text-center read-content-main"
                  v-bind:style="readConfig.readContentStyle"
-                 v-html="bookData.chapter.content"
                  @click="touchReadContent($event)"
                  @touchstart="touchEndPrevent($event)">
+                <article class="read-content"
+                         v-html="bookData.chapter.content"
+                >
 
+                </article>
             </div>
         </div>
         <v-menu :menuOption="menuOption"
@@ -25,6 +28,15 @@
         },
         mounted() {
             this.loadChapter(0, false);
+            //内容分页
+            let newContent = this.splitScreenPage(document.querySelector('.read-content'));
+            let container = document.querySelector('.read-content-main');
+            container.appendChild(newContent);
+            while (newContent.offsetHeight > screen.height) {
+                newContent = splitScreenPage(newContent);
+                container.appendChild(newContent);
+            }
+
         },
         created() {
             let _this = this;
@@ -94,7 +106,7 @@
             }
         },
         methods: {
-            loadReadSetting(chapterInfo) {
+            loadReadContentAndSetting(chapterInfo) {
                 let _this = this;
                 _this.bookData = chapterInfo;
                 //设置样式
@@ -112,7 +124,7 @@
                     preLoad: preload
                 }, function(chapterInfo) {
 //                    chapterInfo.chapter.content = '';
-                    _this.loadReadSetting(chapterInfo);
+                    _this.loadReadContentAndSetting(chapterInfo);
                     _this.bus.$emit('chapterList', chapterInfo.bookChapters);
                     _this.bus.$emit('readConfig', chapterInfo.bookReadSetting);
                     //滚动到顶部
@@ -135,18 +147,18 @@
                 let windowHeight = window.innerHeight;
                 let documentHeight = _this.readContentObject.scrollHeight;
 
-                var lineHeight = parseInt(_this.readConfig.readContentStyle.lineHeight);
-                var isTop = scrollTop < 10;
-                var isBottom = (documentHeight -
+                let lineHeight = parseInt(_this.readConfig.readContentStyle.lineHeight);
+                let isTop = scrollTop < 10;
+                let isBottom = (documentHeight -
                     (windowHeight + scrollTop)) == 0;
 
-                var tapX = e.clientX;
-                var tapY = e.clientY;
-                var tap = readConfig.pageMethod == "⇄" ? tapX : tapY;
+                let tapX = e.clientX;
+                let tapY = e.clientY;
+                let tap = readConfig.pageMethod == "⇄" ? tapX : tapY;
 
-                var width = screen.width;
-                var height = screen.height;
-                var widthOrHeight = readConfig.pageMethod == "⇄" ? width : height;
+                let width = screen.width;
+                let height = screen.height;
+                let widthOrHeight = readConfig.pageMethod == "⇄" ? width : height;
 
                 //点击屏幕中央唤起菜单
                 if (tap < (widthOrHeight / 3 * 2) && tap > (widthOrHeight / 3 * 1)) {
@@ -185,14 +197,110 @@
             },
             touchEndPrevent(e) {
                 e.preventDefault();
+            },
+            assembleText(textContentText,
+                         textContentTextLast,
+                         textContent,
+                         textContentAppend) {
+                let windowHeight = screen.height;
+                let isOverFlow = textContent.offsetHeight > windowHeight;
+                let loop = true;
+                let char = '';
+                let textContentTemp = '';
+                let textContentAppendText = [];
+
+                console.log('是否溢出：',isOverFlow)
+
+                while (loop) {
+                    if (isOverFlow) {
+                        //移除最后一个字符
+                        char = textContentText.pop();
+                        //准备把最后一个字符赋值给新元素
+                        textContentAppendText.unshift(char);
+                    } else {
+                        //移除剩余内容的第一个字符
+                        char = textContentTextLast.shift();
+                        //剩余内容的第一个字符赋值给原元素
+                        textContentText.push(char);
+                    }
+
+                    //重新组装新原元素内容
+                    textContentTemp = textContentText.join('');
+                    //组装后内容赋值给第一个元素
+                    textContent.innerText = textContentTemp;
+                    //更新溢出状态
+                    if (isOverFlow) {
+                        loop = textContent.offsetHeight > windowHeight;
+                    } else {
+                        loop = textContent.offsetHeight < windowHeight;
+                    }
+                    console.log(textContent.offsetHeight)
+                }
+
+                if (isOverFlow) {
+                    textContentAppend.innerText = textContentAppendText.join('') + textContentTextLast.join('');
+                } else {
+                    //因为多加了一个字符，所以要减掉
+                    textContentText = textContent.innerText.split('');
+                    let overChar = textContentText.pop();
+                    textContent.innerText = textContentText.join('');
+                    textContentTextLast.unshift(overChar);
+                    //刚好满框或大于框了就把剩余内容赋值给新元素
+                    textContentAppend.innerText = textContentTextLast.join('');
+                }
+
+
+                return textContentAppend;
+            },
+            splitScreenPage(textContent) {
+                let _this = this;
+                let windowWidth = screen.width;
+                let windowHeight = screen.height;
+                console.log(windowWidth,windowHeight)
+                let lineHeight = parseInt(_this.readConfig.readContentStyle.lineHeight);
+                let fontSize = parseInt(_this.readConfig.readContentStyle.fontSize);
+
+                let textContentText = textContent.innerText;
+
+                //计算一页大概多少字
+                let wordsNum = parseInt((windowWidth * windowHeight) / (lineHeight * fontSize)) - 30;
+
+                //剩余内容
+                let textContentTextLast = textContentText.substring(wordsNum);
+
+                //截取相对第一页大概的内容并赋值给原元素
+                textContentText = textContentText.substring(0,wordsNum);
+                textContent.innerText = textContentText;
+                //拆分原元素内容为数组
+                textContentText = textContentText.split('');
+                //拆分剩下元素内容为数组
+                textContentTextLast = textContentTextLast.split('');
+
+
+                //创建新元素
+                let textContentAppend = document.createElement('div');
+                //新元素添加class
+                textContentAppend.classList.add('read-content');
+
+                //判断是否超出或没满框
+                return _this.assembleText(textContentText,
+                    textContentTextLast,
+                    textContent,
+                    textContentAppend);
+
             }
         }
     }
 </script>
 <style lang="scss">
 
+    .read-content-main {
+        height: 100%;
+    }
     .read-content {
-        min-height: 100%;
+        height: 100%;
+        border: 1px solid #FF3333;
+        margin-bottom: 30px;
     }
     .read-content p {
         padding: 0px;
