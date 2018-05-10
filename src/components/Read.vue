@@ -12,6 +12,11 @@
                 >
 
                 </article>
+
+                <article v-for="page in splitPages"
+                         v-html="bookData.chapter.content"
+                         v-show="currentPage == ($index + 1)"
+                         class="read-content"></article>
             </div>
         </div>
         <v-menu :menuOption="menuOption"
