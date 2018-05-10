@@ -8,6 +8,7 @@
                  @touchstart="touchEndPrevent($event)">
                 <article class="read-content"
                          v-html="bookData.chapter.content"
+                         v-show="currentPage == 1"
                 >
 
                 </article>
@@ -27,15 +28,8 @@
             'v-menu': menu
         },
         mounted() {
-            this.loadChapter(0, false);
-            //内容分页
-            let newContent = this.splitScreenPage(document.querySelector('.read-content'));
-            let container = document.querySelector('.read-content-main');
-            container.appendChild(newContent);
-            while (newContent.offsetHeight > screen.height) {
-                newContent = splitScreenPage(newContent);
-                container.appendChild(newContent);
-            }
+            let _this = this;
+            _this.loadChapter(0, false);
 
         },
         created() {
@@ -55,6 +49,9 @@
                 _this.readConfig.readContentStyle.lineHeight = parseInt(bookReadSetting.lineHeight) + 'px';
                 _this.readConfig.readContentStyle.fontSize = parseInt(bookReadSetting.fontSize) + 'px';
 
+            });
+            _this.$on('assemblePages', function () {
+                _this.assemblePages();
             })
         },
         data() {
@@ -102,13 +99,18 @@
                     isShowMenu: false
                 },
                 chapterList: [],
-                readContentObject: undefined
+                readContentObject: undefined,
+                currentPage: 1,
+                splitPages: []
             }
         },
         methods: {
             loadReadContentAndSetting(chapterInfo) {
                 let _this = this;
+                //设置内容信息
                 _this.bookData = chapterInfo;
+                //拆分页面
+                _this.$emit('assemblePages');
                 //设置样式
                 _this.readConfig.readMainStyle.backgroundColor = chapterInfo.bookReadSetting.bgColor;
                 _this.readConfig.readMainStyle.color = chapterInfo.bookReadSetting.color;
@@ -165,32 +167,18 @@
                     _this.toggleMenu();
                     return;
                 }
-                console.log('documentHeight',documentHeight)
-                console.log('windowHeight',windowHeight)
-                console.log('lineHeight',lineHeight)
 
                 if ((tap > (widthOrHeight / 3 * 2))
                     && !isBottom) {
-                    //向下滚动
-                    let willScrollTo = scrollTop + height;
-
-//                    console.log('前',willScrollTo)
-//                    let beishu = parseInt((documentHeight - willScrollTo - windowHeight) / lineHeight);
-//                    willScrollTo = documentHeight - beishu * lineHeight - windowHeight;
-
-//                    console.log('后',willScrollTo)
-                    _this.scrollTo(_this.readContentObject, willScrollTo, 30);
+                    //下一页
+                    _this.currentPage += 1;
                     return;
                 }
 
                 if (tap < (widthOrHeight / 3 * 1)
                     && !isTop) {
-                    //向上滚动
-                    let willScrollTo = scrollTop - height + lineHeight;
-                    let beishu = parseInt((documentHeight - willScrollTo - windowHeight) / lineHeight);
-                    willScrollTo = documentHeight - beishu * lineHeight - windowHeight;
-
-                    _this.scrollTo(_this.readContentObject, willScrollTo, 30);
+                    //上一页
+                    _this.currentPage -= 1;
                     return;
                 }
 
@@ -288,6 +276,15 @@
                     textContent,
                     textContentAppend);
 
+            },
+            assemblePages() {
+                let _this = this;
+                //内容分页
+                let newContent = _this.splitScreenPage(document.querySelector('.read-content'));
+                while (newContent.offsetHeight > screen.height) {
+                    newContent = splitScreenPage(newContent);
+                    _this.splitPages.push(newContent.innerText);
+                }
             }
         }
     }
