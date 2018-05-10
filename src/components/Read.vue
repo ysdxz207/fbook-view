@@ -1,22 +1,25 @@
 <template xmlns:v-bind="http://www.w3.org/1999/xhtml">
     <div class="page" v-nav="{hideNavbar: true}">
         <div class="page-content" v-bind:style="readConfig.readMainStyle">
-            <p class="title" v-text="bookData.chapter.title" :style="'height: ' + readConfig.readContentStyle.lineHeight"></p>
             <div class="text-center read-content-main"
                  v-bind:style="readConfig.readContentStyle"
                  @click="touchReadContent($event)"
                  @touchstart="touchEndPrevent($event)">
-                <article class="read-content"
-                         v-html="bookData.chapter.content"
+                <p class="title" v-text="bookData.chapter.title" :style="'height: ' + readConfig.readContentStyle.lineHeight"></p>
+
+                <article class="read-content first-page"
                          v-show="currentPage == 1"
                 >
 
                 </article>
 
+                <transition-group tag="div" name="fade">
                 <article v-for="page in splitPages"
-                         v-html="bookData.chapter.content"
-                         v-show="currentPage == ($index + 1)"
-                         class="read-content"></article>
+                         v-show="currentPage == page.index"
+                         class="read-content"
+                         v-text="page.content">
+                </article>
+                </transition-group>
             </div>
         </div>
         <v-menu :menuOption="menuOption"
@@ -43,7 +46,7 @@
                 _this.bookData = chapterInfo;
             });
             _this.bus.$on('readScrollTop', function () {
-                _this.readContentObject = document.querySelector('.page-content');
+                _this.readContentObject = document.querySelector('.read-content-main');
                 _this.readContentObject.scrollTop = 0;
             });
             _this.bus.$on('readConfigFeedback', function (bookReadSetting) {
@@ -55,8 +58,8 @@
                 _this.readConfig.readContentStyle.fontSize = parseInt(bookReadSetting.fontSize) + 'px';
 
             });
-            _this.$on('assemblePages', function () {
-                _this.assemblePages();
+            _this.$on('assemblePages', function (chapter) {
+                _this.assemblePages(chapter);
             })
         },
         data() {
@@ -115,7 +118,7 @@
                 //设置内容信息
                 _this.bookData = chapterInfo;
                 //拆分页面
-                _this.$emit('assemblePages');
+                _this.$emit('assemblePages', chapterInfo.chapter);
                 //设置样式
                 _this.readConfig.readMainStyle.backgroundColor = chapterInfo.bookReadSetting.bgColor;
                 _this.readConfig.readMainStyle.color = chapterInfo.bookReadSetting.color;
@@ -154,11 +157,6 @@
                 let windowHeight = window.innerHeight;
                 let documentHeight = _this.readContentObject.scrollHeight;
 
-                let lineHeight = parseInt(_this.readConfig.readContentStyle.lineHeight);
-                let isTop = scrollTop < 10;
-                let isBottom = (documentHeight -
-                    (windowHeight + scrollTop)) == 0;
-
                 let tapX = e.clientX;
                 let tapY = e.clientY;
                 let tap = readConfig.pageMethod == "⇄" ? tapX : tapY;
@@ -173,9 +171,9 @@
                     return;
                 }
 
-                if ((tap > (widthOrHeight / 3 * 2))
-                    && !isBottom) {
+                if ((tap > (widthOrHeight / 3 * 2))) {
                     //下一页
+                    console.log(_this.currentPage,_this.splitPages.length)
                     if (_this.currentPage == _this.splitPages.length) {
                         //下一章
                         return;
@@ -184,8 +182,7 @@
                     return;
                 }
 
-                if (tap < (widthOrHeight / 3 * 1)
-                    && !isTop) {
+                if (tap < (widthOrHeight / 3 * 1)) {
                     //上一页
                     if (_this.currentPage == 1) {
                         return;
@@ -200,14 +197,21 @@
             },
             assembleText(textContentText,
                          textContentTextLast,
-                         textContent,
-                         textContentAppend) {
+                         textContent) {
+                let _this = this;
+                let windowWidth = screen.width;
                 let windowHeight = screen.height;
                 let isOverFlow = textContent.offsetHeight > windowHeight;
                 let loop = true;
                 let char = '';
                 let textContentTemp = '';
                 let textContentAppendText = [];
+
+                //创建新元素
+                let textContentAppend = document.createElement('article');
+                //新元素添加class
+                textContentAppend.classList.add('read-content-temp');
+                textContentAppend.width = windowWidth;
 
                 console.log('是否溢出：',isOverFlow)
 
@@ -234,7 +238,6 @@
                     } else {
                         loop = textContent.offsetHeight < windowHeight;
                     }
-                    console.log(textContent.offsetHeight)
                 }
 
                 if (isOverFlow) {
@@ -248,7 +251,7 @@
                     //刚好满框或大于框了就把剩余内容赋值给新元素
                     textContentAppend.innerText = textContentTextLast.join('');
                 }
-
+                _this.splitPages.push({index: _this.splitPages.length + 2, content: textContent.innerText});
 
                 return textContentAppend;
             },
@@ -256,7 +259,6 @@
                 let _this = this;
                 let windowWidth = screen.width;
                 let windowHeight = screen.height;
-                console.log(windowWidth,windowHeight)
                 let lineHeight = parseInt(_this.readConfig.readContentStyle.lineHeight);
                 let fontSize = parseInt(_this.readConfig.readContentStyle.fontSize);
 
@@ -276,27 +278,36 @@
                 //拆分剩下元素内容为数组
                 textContentTextLast = textContentTextLast.split('');
 
-
-                //创建新元素
-                let textContentAppend = document.createElement('div');
-                //新元素添加class
-                textContentAppend.classList.add('read-content');
-
                 //判断是否超出或没满框
                 return _this.assembleText(textContentText,
                     textContentTextLast,
-                    textContent,
-                    textContentAppend);
+                    textContent);
 
             },
-            assemblePages() {
+            assemblePages(chapter) {
                 let _this = this;
                 //内容分页
-                let newContent = _this.splitScreenPage(document.querySelector('.read-content'));
+                let readContent = document.querySelector('.read-content-main');
+
+                let firstPage = document.querySelector('.first-page');
+                firstPage.innerHTML = chapter.content;
+                let newContent = _this.splitScreenPage(firstPage);
+                readContent.appendChild(newContent);
+
+                let temps = [];
+                temps.push(newContent);
+
                 while (newContent.offsetHeight > screen.height) {
-                    newContent = splitScreenPage(newContent);
-                    _this.splitPages.push(newContent.innerText);
+                    newContent = _this.splitScreenPage(newContent);
+                    readContent.appendChild(newContent);
+                    temps.push(newContent);
                 }
+
+                while (temps.length > 0) {
+                    readContent.removeChild(temps.pop());
+                }
+
+
             }
         }
     }
@@ -304,12 +315,8 @@
 <style lang="scss">
 
     .read-content-main {
-        height: 100%;
     }
     .read-content {
-        height: 100%;
-        border: 1px solid #FF3333;
-        margin-bottom: 30px;
     }
     .read-content p {
         padding: 0px;
