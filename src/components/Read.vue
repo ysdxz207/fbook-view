@@ -176,6 +176,10 @@
                 if ((tap > (widthOrHeight / 3 * 2))
                     && !isBottom) {
                     //下一页
+                    if (_this.currentPage == _this.splitPages.length) {
+                        //下一章
+                        return;
+                    }
                     _this.currentPage += 1;
                     return;
                 }
@@ -183,6 +187,9 @@
                 if (tap < (widthOrHeight / 3 * 1)
                     && !isTop) {
                     //上一页
+                    if (_this.currentPage == 1) {
+                        return;
+                    }
                     _this.currentPage -= 1;
                     return;
                 }
