@@ -4,7 +4,7 @@
             <div class="text-center read-content-main"
                  v-bind:style="readConfig.readContentStyle"
                  @click="touchReadContent($event)">
-                <p class="title" v-text="bookData.chapter.title" :style="'height: ' + readConfig.readContentStyle.lineHeight"></p>
+                <p class="title" v-text="bookData.chapter.title" :style="readConfig.readTitleStyle"></p>
 
                 <article class="read-content first-page"
                          v-show="currentPage == 1"
@@ -82,7 +82,8 @@
                         fontSize: '14px',
                         paddingLeft: '8px',
                         backgroundColor: '#6d816f',
-                        margin: '0px'
+                        margin: '0px',
+                        height: '16px'
                     },
                     readMainStyle: {
                         backgroundColor: '#6d816f',
@@ -197,7 +198,8 @@
                          textContent) {
                 let _this = this;
                 let windowWidth = screen.width;
-                let windowHeight = screen.height;
+                //减掉标题高度
+                let windowHeight = screen.height - parseInt(_this.readConfig.readTitleStyle.height);
                 let isOverFlow = textContent.scrollHeight > windowHeight;
                 let loop = true;
                 let char = '';
