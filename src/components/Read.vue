@@ -12,12 +12,11 @@
 
                 </article>
 
-                <transition name="fade" v-for="page in splitPages"
-                            v-show="currentPage == page.index">
-                    <article class="read-content"
-                             v-text="page.content">
-                    </article>
-                </transition>
+                <article class="read-content"
+                         v-for="page in splitPages"
+                         v-show="currentPage == page.index"
+                         v-text="page.content">
+                </article>
             </div>
         </div>
         <v-menu :menuOption="menuOption"
