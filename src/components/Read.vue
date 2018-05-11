@@ -3,8 +3,7 @@
         <div class="page-content" v-bind:style="readConfig.readMainStyle">
             <div class="text-center read-content-main"
                  v-bind:style="readConfig.readContentStyle"
-                 @click="touchReadContent($event)"
-                 @touchstart="touchEndPrevent($event)">
+                 @click="touchReadContent($event)">
                 <p class="title" v-text="bookData.chapter.title" :style="'height: ' + readConfig.readContentStyle.lineHeight"></p>
 
                 <article class="read-content first-page"
@@ -13,13 +12,12 @@
 
                 </article>
 
-                <transition-group tag="div" name="fade">
-                <article v-for="page in splitPages"
-                         v-show="currentPage == page.index"
-                         class="read-content"
-                         v-text="page.content">
-                </article>
-                </transition-group>
+                <transition name="fade" v-for="page in splitPages"
+                            v-show="currentPage == page.index">
+                    <article class="read-content"
+                             v-text="page.content">
+                    </article>
+                </transition>
             </div>
         </div>
         <v-menu :menuOption="menuOption"
