@@ -52,6 +52,8 @@
                 _this.readConfig.readContentStyle.lineHeight = parseInt(bookReadSetting.lineHeight) + 'px';
                 _this.readConfig.readContentStyle.fontSize = parseInt(bookReadSetting.fontSize) + 'px';
 
+                //重新分页
+                _this.$emit('assemblePages', _this.bookData.chapter)
             });
             _this.$on('assemblePages', function (chapter) {
                 _this.assemblePages(chapter);
@@ -77,7 +79,7 @@
                 },
                 readConfig: {
                     readTitleStyle: {
-                        fontSize: '14px',
+                        fontSize: '12px',
                         paddingLeft: '8px',
                         backgroundColor: '#6d816f',
                         margin: '0px',
@@ -107,7 +109,8 @@
                 readContentObject: undefined,
                 currentPage: 1,
                 splitPages: [],
-                pageTransition: 'pop-in'
+                pageTransition: 'pop-in',
+                wordsNum: 0
             }
         },
         methods: {
@@ -209,9 +212,8 @@
                 textContentAppend.classList.add('read-content-temp');
                 //设置样式
                 for (let style in _this.readConfig.readContentStyle) {
-                    textContentAppend.style[style] = _this.readConfig.readContentStyle.fontSize;
+                    textContentAppend.style[style] = _this.readConfig.readContentStyle[style];
                 }
-                console.log('是否溢出：',isOverFlow)
 
                 while (loop) {
                     if (isOverFlow) {
@@ -253,21 +255,14 @@
             },
             splitScreenPage(textContent) {
                 let _this = this;
-                let windowWidth = screen.width;
-                let windowHeight = screen.height - parseInt(_this.readConfig.readTitleStyle.height);
-                let lineHeight = parseInt(_this.readConfig.readContentStyle.lineHeight);
-                let fontSize = parseInt(_this.readConfig.readContentStyle.fontSize);
 
                 let textContentText = textContent.innerText;
 
-                //计算一页大概多少字
-                let wordsNum = parseInt((windowWidth * windowHeight) / (lineHeight * fontSize)) - 30;
 
-                //剩余内容
-                let textContentTextLast = textContentText.substring(wordsNum);
+                let textContentTextLast = textContentText.substring(_this.wordsNum);
 
                 //截取相对第一页大概的内容并赋值给原元素
-                textContentText = textContentText.substring(0,wordsNum);
+                textContentText = textContentText.substring(0,_this.wordsNum);
                 textContent.innerText = textContentText;
                 //拆分原元素内容为数组
                 textContentText = textContentText.split('');
@@ -282,13 +277,22 @@
             },
             assemblePages(chapter) {
                 let _this = this;
+                _this.splitPages = [];
+                let windowWidth = screen.width;
+                let windowHeight = screen.height - parseInt(_this.readConfig.readTitleStyle.height);
+                let lineHeight = parseInt(_this.readConfig.readContentStyle.lineHeight);
+                let fontSize = parseInt(_this.readConfig.readContentStyle.fontSize);
+
+                //计算一页大概多少字
+                _this.wordsNum = parseInt((windowWidth * windowHeight) / (lineHeight * fontSize));
+                //剩余内容
                 //内容分页
                 let readContent = document.querySelector('.read-content-main');
 
                 let pageContent = document.createElement('article');
                 //设置样式
                 for (let style in _this.readConfig.readContentStyle) {
-                    pageContent.style[style] = _this.readConfig.readContentStyle.fontSize;
+                    pageContent.style[style] = _this.readConfig.readContentStyle[style];
                 }
                 pageContent.innerHTML = chapter.content;
                 readContent.appendChild(pageContent);
@@ -296,7 +300,7 @@
                 let temps = [];
                 temps.push(pageContent);
 
-                while (pageContent.offsetHeight > screen.height - parseInt(_this.readConfig.readTitleStyle.height)) {
+                while (pageContent.offsetHeight > windowHeight) {
                     pageContent = _this.splitScreenPage(pageContent);
                     readContent.appendChild(pageContent);
                     temps.push(pageContent);
@@ -321,7 +325,6 @@
     }
     .read-content {
         text-align: left;
-        padding-bottom: 20px;
     }
     .read-content p {
         padding: 0px;
