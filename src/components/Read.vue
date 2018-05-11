@@ -6,11 +6,15 @@
             <div class="text-center read-content-main"
                  v-bind:style="readConfig.readContentStyle">
                 <p class="title" v-text="bookData.chapter.title" :style="readConfig.readTitleStyle"></p>
-                <article class="read-content"
-                         v-for="page in splitPages"
-                         v-show="currentPage == page.index"
-                         v-html="page.content">
-                </article>
+
+                <transition-group tag="div" v-bind:name="pageTransition">
+                    <article class="read-content"
+                             v-for="page in splitPages"
+                             v-show="currentPage == page.index"
+                             v-html="page.content"
+                             v-bind:key="page.index">
+                    </article>
+                </transition-group>
             </div>
         </div>
         <v-menu :menuOption="menuOption"
@@ -102,7 +106,8 @@
                 chapterList: [],
                 readContentObject: undefined,
                 currentPage: 1,
-                splitPages: []
+                splitPages: [],
+                pageTransition: 'pop-in'
             }
         },
         methods: {
@@ -165,6 +170,7 @@
 
                 if ((tap > (widthOrHeight / 3 * 2))) {
                     //下一页
+                    _this.pageTransition = 'pop-in';
                     if (_this.currentPage >= _this.splitPages.length) {
                         //下一章
                         return;
@@ -178,6 +184,7 @@
                     if (_this.currentPage == 1) {
                         return;
                     }
+                    _this.pageTransition = 'pop-out';
                     _this.currentPage -= 1;
                     return;
                 }
@@ -283,7 +290,6 @@
                 for (let style in _this.readConfig.readContentStyle) {
                     pageContent.style[style] = _this.readConfig.readContentStyle.fontSize;
                 }
-                console.log(pageContent.style)
                 pageContent.innerHTML = chapter.content;
                 readContent.appendChild(pageContent);
 
@@ -307,6 +313,9 @@
     }
 </script>
 <style lang="scss">
+
+    @import "../assets/scss/transition.scss";
+
 
     .read-content-main {
     }
