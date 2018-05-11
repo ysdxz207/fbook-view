@@ -191,9 +191,6 @@
                 }
 
             },
-            touchEndPrevent(e) {
-                e.preventDefault();
-            },
             assembleText(textContentText,
                          textContentTextLast,
                          textContent) {
@@ -248,7 +245,6 @@
                     let overChar = textContentText.pop();
                     textContent.innerText = textContentText.join('');
                     textContentTextLast.unshift(overChar);
-                    //刚好满框或大于框了就把剩余内容赋值给新元素
                     textContentAppend.innerText = textContentTextLast.join('');
                 }
                 _this.splitPages.push({index: _this.splitPages.length + 2, content: textContent.innerText});
@@ -258,7 +254,7 @@
             splitScreenPage(textContent) {
                 let _this = this;
                 let windowWidth = screen.width;
-                let windowHeight = screen.height;
+                let windowHeight = screen.height - parseInt(_this.readConfig.readTitleStyle.height);
                 let lineHeight = parseInt(_this.readConfig.readContentStyle.lineHeight);
                 let fontSize = parseInt(_this.readConfig.readContentStyle.fontSize);
 
