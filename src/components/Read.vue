@@ -198,7 +198,7 @@
                 let _this = this;
                 let windowWidth = screen.width;
                 let windowHeight = screen.height;
-                let isOverFlow = textContent.offsetHeight > windowHeight;
+                let isOverFlow = textContent.scrollHeight > windowHeight;
                 let loop = true;
                 let char = '';
                 let textContentTemp = '';
@@ -231,9 +231,9 @@
                     textContent.innerText = textContentTemp;
                     //更新溢出状态
                     if (isOverFlow) {
-                        loop = textContent.offsetHeight > windowHeight;
+                        loop = textContent.scrollHeight > windowHeight;
                     } else {
-                        loop = textContent.offsetHeight < windowHeight;
+                        loop = textContent.scrollHeight < windowHeight;
                     }
                 }
 
@@ -294,7 +294,7 @@
                 let temps = [];
                 temps.push(newContent);
 
-                while (newContent.offsetHeight > screen.height) {
+                while (newContent.scrollHeight > screen.height) {
                     newContent = _this.splitScreenPage(newContent);
                     readContent.appendChild(newContent);
                     temps.push(newContent);
