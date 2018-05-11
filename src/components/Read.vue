@@ -130,12 +130,15 @@
             },
             loadChapter(direction, preload) {
                 let _this = this;
+
                 _this.getChapterInfo({
                     bookId: _this.bookData.book.id,
                     lastReadingChapterNum: _this.bookData.bookRead.lastReadingChapterNum,
                     direction: direction,
                     preLoad: preload
                 }, function(chapterInfo) {
+                    //页码设置为1
+                    _this.currentPage = 1;
 //                    chapterInfo.chapter.content = '';
                     _this.loadReadContentAndSetting(chapterInfo);
                     _this.bus.$emit('chapterList', chapterInfo.bookChapters);
@@ -176,6 +179,7 @@
                     _this.pageTransition = 'pop-in';
                     if (_this.currentPage >= _this.splitPages.length) {
                         //下一章
+                        _this.loadChapter(1, false);
                         return;
                     }
                     _this.currentPage += 1;
@@ -197,9 +201,8 @@
                          textContentTextLast,
                          textContent) {
                 let _this = this;
-                let windowWidth = screen.width;
-                //减掉标题高度
-                let windowHeight = screen.height - parseInt(_this.readConfig.readTitleStyle.height);
+                //减掉标题高度,手机多出了点，所以多减20
+                let windowHeight = screen.height - parseInt(_this.readConfig.readTitleStyle.height) - 20;
                 let isOverFlow = textContent.offsetHeight > windowHeight;
                 let loop = true;
                 let char = '';
