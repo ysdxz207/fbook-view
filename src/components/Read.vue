@@ -297,7 +297,7 @@
                 let temps = [];
                 temps.push(newContent);
 
-                while (newContent.scrollHeight > screen.height) {
+                while (newContent.scrollHeight > screen.height - parseInt(_this.readConfig.readTitleStyle.height)) {
                     newContent = _this.splitScreenPage(newContent);
                     readContent.appendChild(newContent);
                     temps.push(newContent);
