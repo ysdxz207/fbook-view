@@ -83,7 +83,8 @@
                         paddingLeft: '8px',
                         backgroundColor: '#6d816f',
                         margin: '0px',
-                        height: '16px'
+                        height: '20px',
+                        textAlign: 'left'
                     },
                     readMainStyle: {
                         backgroundColor: '#6d816f',
