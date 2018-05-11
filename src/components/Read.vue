@@ -1,21 +1,15 @@
 <template xmlns:v-bind="http://www.w3.org/1999/xhtml">
     <div class="page" v-nav="{hideNavbar: true}">
-        <div class="page-content" v-bind:style="readConfig.readMainStyle">
+        <div class="page-content"
+             v-bind:style="readConfig.readMainStyle"
+             @click="touchReadContent($event)">
             <div class="text-center read-content-main"
-                 v-bind:style="readConfig.readContentStyle"
-                 @click="touchReadContent($event)">
+                 v-bind:style="readConfig.readContentStyle">
                 <p class="title" v-text="bookData.chapter.title" :style="readConfig.readTitleStyle"></p>
-
-                <article class="read-content first-page"
-                         v-show="currentPage == 1"
-                >
-
-                </article>
-
                 <article class="read-content"
                          v-for="page in splitPages"
                          v-show="currentPage == page.index"
-                         v-text="page.content">
+                         v-html="page.content">
                 </article>
             </div>
         </div>
@@ -57,7 +51,7 @@
             });
             _this.$on('assemblePages', function (chapter) {
                 _this.assemblePages(chapter);
-            })
+            });
         },
         data() {
             let _this = this;
@@ -116,13 +110,15 @@
                 let _this = this;
                 //设置内容信息
                 _this.bookData = chapterInfo;
-                //拆分页面
-                _this.$emit('assemblePages', chapterInfo.chapter);
                 //设置样式
                 _this.readConfig.readMainStyle.backgroundColor = chapterInfo.bookReadSetting.bgColor;
                 _this.readConfig.readMainStyle.color = chapterInfo.bookReadSetting.color;
                 _this.readConfig.readContentStyle.fontSize = parseInt(chapterInfo.bookReadSetting.fontSize) + 'px';
                 _this.readConfig.readContentStyle.lineHeight = parseInt(chapterInfo.bookReadSetting.lineHeight) + 'px';
+
+                //拆分页面
+                _this.$emit('assemblePages', chapterInfo.chapter);
+
             },
             loadChapter(direction, preload) {
                 let _this = this;
@@ -152,9 +148,6 @@
             touchReadContent(e) {
                 let _this = this;
                 let readConfig = _this.bookData.bookReadSetting;
-                let scrollTop = _this.readContentObject.scrollTop;
-                let windowHeight = window.innerHeight;
-                let documentHeight = _this.readContentObject.scrollHeight;
 
                 let tapX = e.clientX;
                 let tapY = e.clientY;
@@ -172,8 +165,7 @@
 
                 if ((tap > (widthOrHeight / 3 * 2))) {
                     //下一页
-                    console.log(_this.currentPage,_this.splitPages.length)
-                    if (_this.currentPage == _this.splitPages.length) {
+                    if (_this.currentPage >= _this.splitPages.length) {
                         //下一章
                         return;
                     }
@@ -198,7 +190,7 @@
                 let windowWidth = screen.width;
                 //减掉标题高度
                 let windowHeight = screen.height - parseInt(_this.readConfig.readTitleStyle.height);
-                let isOverFlow = textContent.scrollHeight > windowHeight;
+                let isOverFlow = textContent.offsetHeight > windowHeight;
                 let loop = true;
                 let char = '';
                 let textContentTemp = '';
@@ -208,8 +200,10 @@
                 let textContentAppend = document.createElement('article');
                 //新元素添加class
                 textContentAppend.classList.add('read-content-temp');
-                textContentAppend.width = windowWidth;
-
+                //设置样式
+                for (let style in _this.readConfig.readContentStyle) {
+                    textContentAppend.style[style] = _this.readConfig.readContentStyle.fontSize;
+                }
                 console.log('是否溢出：',isOverFlow)
 
                 while (loop) {
@@ -231,9 +225,9 @@
                     textContent.innerText = textContentTemp;
                     //更新溢出状态
                     if (isOverFlow) {
-                        loop = textContent.scrollHeight > windowHeight;
+                        loop = textContent.offsetHeight > windowHeight;
                     } else {
-                        loop = textContent.scrollHeight < windowHeight;
+                        loop = textContent.offsetHeight < windowHeight;
                     }
                 }
 
@@ -247,7 +241,6 @@
                     textContentTextLast.unshift(overChar);
                     textContentAppend.innerText = textContentTextLast.join('');
                 }
-                _this.splitPages.push({index: _this.splitPages.length + 2, content: textContent.innerText});
 
                 return textContentAppend;
             },
@@ -285,24 +278,29 @@
                 //内容分页
                 let readContent = document.querySelector('.read-content-main');
 
-                let firstPage = document.querySelector('.first-page');
-                firstPage.innerHTML = chapter.content;
-                let newContent = _this.splitScreenPage(firstPage);
-                readContent.appendChild(newContent);
+                let pageContent = document.createElement('article');
+                //设置样式
+                for (let style in _this.readConfig.readContentStyle) {
+                    pageContent.style[style] = _this.readConfig.readContentStyle.fontSize;
+                }
+                console.log(pageContent.style)
+                pageContent.innerHTML = chapter.content;
+                readContent.appendChild(pageContent);
 
                 let temps = [];
-                temps.push(newContent);
+                temps.push(pageContent);
 
-                while (newContent.scrollHeight > screen.height - parseInt(_this.readConfig.readTitleStyle.height)) {
-                    newContent = _this.splitScreenPage(newContent);
-                    readContent.appendChild(newContent);
-                    temps.push(newContent);
+                while (pageContent.offsetHeight > screen.height - parseInt(_this.readConfig.readTitleStyle.height)) {
+                    pageContent = _this.splitScreenPage(pageContent);
+                    readContent.appendChild(pageContent);
+                    temps.push(pageContent);
                 }
 
                 while (temps.length > 0) {
-                    readContent.removeChild(temps.pop());
+                    let page = temps.shift();
+                    readContent.removeChild(page);
+                    _this.splitPages.push({index: _this.splitPages.length + 1, content: page.innerText.replace(/\n/g, '<br/>')});
                 }
-
 
             }
         }
@@ -313,6 +311,8 @@
     .read-content-main {
     }
     .read-content {
+        text-align: left;
+        padding-bottom: 20px;
     }
     .read-content p {
         padding: 0px;
