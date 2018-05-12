@@ -51,6 +51,7 @@
                 _this.readConfig.readMainStyle.color = bookReadSetting.color;
                 _this.readConfig.readContentStyle.lineHeight = parseInt(bookReadSetting.lineHeight) + 'px';
                 _this.readConfig.readContentStyle.fontSize = parseInt(bookReadSetting.fontSize) + 'px';
+                _this.readConfig.readTitleStyle.backgroundColor = bookReadSetting.bgColor;
 
                 //重新分页
                 _this.$emit('assemblePages', _this.bookData.chapter)
