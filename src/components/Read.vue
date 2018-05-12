@@ -220,7 +220,7 @@
                          textContent) {
                 let _this = this;
                 //减掉标题高度,手机多出了点，所以多减30
-                let windowHeight = screen.height - parseInt(_this.readConfig.readTitleStyle.height);
+                let windowHeight = screen.height - parseInt(_this.readConfig.readTitleStyle.height) - 20;
                 let isOverFlow = textContent.offsetHeight > windowHeight;
                 let loop = true;
                 let char = '';
