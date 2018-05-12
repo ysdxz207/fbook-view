@@ -85,7 +85,8 @@
                         backgroundColor: '#6d816f',
                         margin: '0px',
                         height: '20px',
-                        textAlign: 'left'
+                        textAlign: 'left',
+                        lineHeight: '20px'
                     },
                     readMainStyle: {
                         backgroundColor: '#6d816f',
