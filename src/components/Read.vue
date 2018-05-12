@@ -12,7 +12,8 @@
                              v-for="page in splitPages"
                              v-show="currentPage == page.index"
                              v-html="page.content"
-                             v-bind:key="page.index">
+                             v-bind:key="page.index"
+                             @touchstart="touchEndPrevent($event)">
                     </article>
                 </transition-group>
             </div>
@@ -216,8 +217,8 @@
                          textContentTextLast,
                          textContent) {
                 let _this = this;
-                //减掉标题高度,手机多出了点，所以多减20
-                let windowHeight = screen.height - parseInt(_this.readConfig.readTitleStyle.height) - 20;
+                //减掉标题高度,手机多出了点，所以多减30
+                let windowHeight = screen.height - parseInt(_this.readConfig.readTitleStyle.height);
                 let isOverFlow = textContent.offsetHeight > windowHeight;
                 let loop = true;
                 let char = '';
@@ -367,6 +368,9 @@
                 }).catch(function (error) {
                 });
                 $loading.hide();
+            },
+            touchEndPrevent(e) {
+                e.preventDefault();
             }
         }
     }
