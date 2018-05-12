@@ -252,6 +252,56 @@ Vue.prototype.getChapterInfo = function (args, callback) {
     });
 };
 
+Vue.prototype.preFetchChapterInfo = function (args, callback) {
+    let _this = this;
+    args = Vue.util.extend({lastReadingChapterNum: 1}, args);
+
+    if (args.lastReadingChapterNum == 1
+        && args.direction == -1) {
+        localStorage.setItem("fbook_is_first_page", "true")
+        return;
+    }
+
+    if (args.lastReadingChapterNum
+        == args.lastChapterNum
+        && args.direction == 1) {
+        localStorage.setItem("fbook_is_last_page", "true")
+        return;
+    }
+
+
+    let params = {};
+    if (args.direction
+        && args.direction != 0) {
+        params.chapter = args.lastReadingChapterNum + args.direction;
+    } else if (args.direction == undefined) {
+        params.chapter = args.chapterNum;
+    }
+
+    params.bookId = args.bookId;
+    params.preLoad = args.preLoad;
+
+    _this.ajax({
+        method: 'post',
+        url: '/chapter',
+        data: params
+
+    }).then(function (response) {
+        switch (response.data.statusCode) {
+            case 200:
+                let data = response.data.data;
+                callback(data);
+                break;
+            default:
+                localStorage.removeItem("fbook_next_chapter")
+
+        }
+
+    }).catch(function (error) {
+        localStorage.removeItem("fbook_next_chapter")
+    });
+};
+
 Vue.prototype.scrollTo = function(element, to, duration) {
     let start = element.scrollTop,
         change = to - start,

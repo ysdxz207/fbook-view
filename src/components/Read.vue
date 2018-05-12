@@ -32,8 +32,7 @@
         },
         mounted() {
             let _this = this;
-            _this.loadChapter(0, false);
-
+            _this.loadChapter(0);
         },
         created() {
             let _this = this;
@@ -98,10 +97,10 @@
                 menuOption: {
                     transition: 'fade',
                     prevChapter: function() {
-                        _this.loadChapter(-1, false);
+                        _this.loadChapter(-1);
                     },
                     nextChapter: function() {
-                        _this.loadChapter(1, false)
+                        _this.loadChapter(1)
                     },
                     isShowMenu: false
                 },
@@ -116,6 +115,8 @@
         methods: {
             loadReadContentAndSetting(chapterInfo) {
                 let _this = this;
+                //页码设置为1
+                _this.currentPage = 1;
                 //设置内容信息
                 _this.bookData = chapterInfo;
                 //设置样式
@@ -124,33 +125,47 @@
                 _this.readConfig.readContentStyle.fontSize = parseInt(chapterInfo.bookReadSetting.fontSize) + 'px';
                 _this.readConfig.readContentStyle.lineHeight = parseInt(chapterInfo.bookReadSetting.lineHeight) + 'px';
 
+                //加载章节列表
+                _this.bus.$emit('chapterList', chapterInfo.bookChapters);
+                //滚动到顶部
+                _this.bus.$emit('readScrollTop');
                 //拆分页面
                 _this.$emit('assemblePages', chapterInfo.chapter);
-
+                //预加载下一章
+                _this.preFetchChapter();
             },
-            loadChapter(direction, preload) {
+            loadChapter(direction) {
                 let _this = this;
+
+                //加载下一章缓存
+                let localNextChapter = localStorage.getItem("fbook_next_chapter");
+
+                if (direction == 1
+                    && localNextChapter) {
+                    _this.loadChapterFromLocalStorage(JSON.parse(localNextChapter));
+                    return;
+                }
 
                 _this.getChapterInfo({
                     bookId: _this.bookData.book.id,
                     lastReadingChapterNum: _this.bookData.bookRead.lastReadingChapterNum,
                     direction: direction,
-                    preLoad: preload
+                    preLoad: false
                 }, function(chapterInfo) {
-                    //页码设置为1
-                    _this.currentPage = 1;
+                    //清空缓存
+                    localStorage.removeItem("fbook_next_chapter")
+
+                    //加载配置信息
+                    _this.bus.$emit('readConfig', chapterInfo.bookReadSetting);
+
 //                    chapterInfo.chapter.content = '';
                     _this.loadReadContentAndSetting(chapterInfo);
-                    _this.bus.$emit('chapterList', chapterInfo.bookChapters);
-                    _this.bus.$emit('readConfig', chapterInfo.bookReadSetting);
-                    //滚动到顶部
-                    _this.bus.$emit('readScrollTop');
-
                     //关闭目录
                     _this.bus.$emit('hide', {
                         hideMenu: true,
                         hideChapterList: true
                     });
+
                 });
             },
             toggleMenu() {
@@ -179,7 +194,7 @@
                     _this.pageTransition = 'pop-in';
                     if (_this.currentPage >= _this.splitPages.length) {
                         //下一章
-                        _this.loadChapter(1, false);
+                        _this.loadChapter(1);
                         return;
                     }
                     _this.currentPage += 1;
@@ -315,6 +330,43 @@
                     _this.splitPages.push({index: _this.splitPages.length + 1, content: page.innerText.replace(/\n/g, '<br/>')});
                 }
 
+            },
+            preFetchChapter() {
+                let _this = this;
+                _this.preFetchChapterInfo({
+                    bookId: _this.bookData.book.id,
+                    lastReadingChapterNum: _this.bookData.bookRead.lastReadingChapterNum,
+                    direction: 1,
+                    preLoad: true
+                }, function(chapterInfo) {
+                    chapterInfo.bookReadSetting = _this.bookData.bookReadSetting;
+                    localStorage.setItem("fbook_next_chapter", JSON.stringify(chapterInfo))
+                });
+            },
+            loadChapterFromLocalStorage(chapterInfo) {
+                $loading.show('读取缓存...');
+                let _this = this;
+                //保存在读章节
+                chapterInfo.bookRead.lastReadingChapterNum += 1;
+                chapterInfo.bookRead.lastReadingChapter = chapterInfo.chapter.title;
+
+                _this.ajax({
+                    method: 'post',
+                    url: '/saveBookRead',
+                    data: chapterInfo.bookRead
+
+                }).then(function (response) {
+                    switch (response.data.statusCode) {
+                        case 200:
+                            _this.loadReadContentAndSetting(chapterInfo);
+                            break;
+                        default:
+
+                    }
+
+                }).catch(function (error) {
+                });
+                $loading.hide();
             }
         }
     }

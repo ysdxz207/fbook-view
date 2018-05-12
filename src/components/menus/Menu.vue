@@ -195,6 +195,7 @@
             },
             feedBackAndSaveReadSetting() {
                 this.bus.$emit('readConfigFeedback', this.bookReadSetting);
+                console.log('触发')
                 this.saveReadSetting(this.bookReadSetting);
             }
 
