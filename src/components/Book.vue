@@ -79,6 +79,7 @@
                                 _this.book = response.data.data;
                                 break;
                             default:
+                                $loading.hide();
                                 $dialog.alert({
                                     content: '错误:' + response.data.message,
                                     okTheme: 'energized'
