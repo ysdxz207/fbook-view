@@ -12,8 +12,7 @@
                              v-for="page in splitPages"
                              v-show="currentPage == page.index"
                              v-html="page.content"
-                             v-bind:key="page.index"
-                             @touchstart="touchEndPrevent($event)">
+                             v-bind:key="page.index">
                     </article>
                 </transition-group>
             </div>
@@ -158,7 +157,7 @@
                     preLoad: false
                 }, function(chapterInfo) {
                     //清空缓存
-                    localStorage.removeItem("fbook_next_chapter")
+                    localStorage.removeItem("fbook_next_chapter");
 
                     //加载配置信息
                     _this.bus.$emit('readConfig', chapterInfo.bookReadSetting);
@@ -202,6 +201,8 @@
                         _this.loadChapter(1);
                         return;
                     }
+                    _this.readContentObject.scrollTop = 0;
+
                     _this.currentPage += 1;
                     return;
                 }
@@ -211,6 +212,8 @@
                     if (_this.currentPage == 1) {
                         return;
                     }
+                    _this.readContentObject.scrollTop = 0;
+
                     _this.pageTransition = 'pop-out';
                     _this.currentPage -= 1;
                     return;
@@ -300,6 +303,8 @@
             },
             assemblePages(chapter) {
                 let _this = this;
+                //清空缓存
+                localStorage.removeItem("fbook_next_chapter");
                 _this.splitPages = [];
                 let windowWidth = screen.width;
                 let windowHeight = screen.height - parseInt(_this.readConfig.readTitleStyle.height);
@@ -354,6 +359,8 @@
                 //保存在读章节
                 chapterInfo.bookRead.lastReadingChapterNum += 1;
                 chapterInfo.bookRead.lastReadingChapter = chapterInfo.chapter.title;
+                //当前页修改设置应用到下一章缓存
+                chapterInfo.bookReadSetting= _this.bookData.bookReadSetting;
 
                 _this.ajax({
                     method: 'post',
@@ -372,9 +379,6 @@
                 }).catch(function (error) {
                 });
                 $loading.hide();
-            },
-            touchEndPrevent(e) {
-                e.preventDefault();
             }
         }
     }
