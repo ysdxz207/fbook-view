@@ -39,6 +39,8 @@
             let _this = this;
             _this.bus.$on('reloadChapterInfo', function (chapterInfo) {
                 _this.bookData = chapterInfo;
+                //拆分页面
+                _this.$emit('assemblePages', chapterInfo.chapter);
             });
             _this.bus.$on('readScrollTop', function () {
                 _this.readContentObject = document.querySelector('.read-content-main');
