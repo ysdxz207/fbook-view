@@ -5,7 +5,7 @@
       <search v-model="search.keywords" placeholder="输入关键字" :on-search="onSearch" :on-cancel="onCancel" cancelText="取消"></search>
 
       <div v-for="book in search.bookList">
-        <router-link :to="{path:'/book',query: {bookId: book.id, aId: book.aId}}" class="link">
+        <router-link :to="{path:'/book',query: {bookId: book.id, bookIdThird: book.bookIdThird}}" class="link">
         <item class="item-icon-left row search-book-list-item">
           <div class="col col-25">
             <img  class="search-book-img":src="book.faceUrl">

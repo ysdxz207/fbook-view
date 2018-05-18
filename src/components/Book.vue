@@ -59,7 +59,7 @@
             return {
                 book: {
                     id: this.$route.query.bookId,
-                    aId: this.$route.query.aId,
+                    bookIdThird: this.$route.query.bookIdThird,
                     faceUrl: '',
                     bookInfo: {
                     }
@@ -71,7 +71,7 @@
                 let _this = this;
                 $loading.show('读取书籍信息...');
 
-                _this.ajax.post('/detail', {bookId: this.book.id, aId: this.book.aId})
+                _this.ajax.post('/detail', {bookId: this.book.id, bookIdThird: this.book.bookIdThird})
                     .then(function (response) {
                         switch (response.data.statusCode) {
                             case 200:
@@ -96,7 +96,7 @@
             addOrDelBook() {
                 let _this = this;
                 $loading.show();
-                _this.ajax.post('/addOrDel', {aId: this.book.aId})
+                _this.ajax.post('/addOrDel', {bookIdThird: this.book.bookIdThird})
                     .then(function (response) {
                         switch (response.data.statusCode) {
                             case 200:
