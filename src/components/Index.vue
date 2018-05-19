@@ -8,7 +8,7 @@
             <div v-for="book in books">
                 <router-link :to="{path:'/book',query: {bookId: book.id, bookIdThird: book.bookIdThird}}" class="cells-books">
                     <img :src="book.faceUrl" class="book-img"/>
-                    <div class="book-title">{{book.name}}</div>
+                    <div class="book-title" :style="book.useApi ? 'color:#ff9407' : ''">{{book.name}}</div>
                 </router-link>
             </div>
 
