@@ -45,7 +45,7 @@
                             default:
                                 $toast.show(response.data.message)
                                 if (response.data.errorCode == 'LOGIN_WRONG_PASSWORD') {
-                                    localStorage.removeItem('fbook_username');
+                                    $storage.get('isLogin');
                                     $router.forward({path: '/login'});
                                 }
                         }
@@ -62,7 +62,13 @@
                 $router.forward({path: '/user'})
             },
             goSearch() {
-                $router.forward({path: '/search'})
+                if ($storage.get("search_list")) {
+                    $storage.remove("search_list");
+                }
+                if ($storage.get("search_keywords")) {
+                    $storage.remove("search_keywords");
+                }
+                $router.forward({path: '/search'});
             }
         }
     }

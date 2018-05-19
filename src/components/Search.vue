@@ -32,9 +32,21 @@
                 }
             }
         },
+        mounted() {
+            let _this = this;
+            //缓存
+            let searchList = $storage.get("search_list");
+            let keywords = $storage.get("search_keywords");
+
+            if (searchList) {
+                _this.search.bookList = JSON.parse(searchList);
+            }
+            if (keywords) {
+                _this.search.keywords = keywords;
+            }
+          },
         methods: {
             onSearch() {
-                this.searching = true;
                 $loading.show('搜索中...');
                 let _this = this;
                 _this.ajax.post('/search', {keywords: this.search.keywords})
@@ -43,6 +55,8 @@
                         switch (response.data.statusCode) {
                             case 200:
                                 _this.search.bookList = response.data.list;
+                                $storage.set("search_list", JSON.stringify(_this.search.bookList));
+                                $storage.set("search_keywords",_this.search.keywords);
                                 break;
                             default:
                                 $dialog.alert({
@@ -59,8 +73,8 @@
                 });
             },
             onCancel() {
-                this.searching = false;
-                this.keywords = ''
+                this.keywords = '';
+                this.search.bookList = [];
             }
         }
     }

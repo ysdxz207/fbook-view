@@ -101,7 +101,7 @@ Vue.use(Vonic.app, {
 
 const env = process.env.NODE_ENV;
 
-const baseURL = env == 'production' ? 'http://api.book.puyixiaowo.win' : 'http://localhost:8010';
+const baseURL = env == 'production' ? 'http://api.book.puyixiaowo.win' : 'http://api.book.puyixiaowo.win';
 
 
 
@@ -130,7 +130,7 @@ Vue.prototype.ajax = ajax;
 $router.beforeEach((to, from, next) => {
     if (to.matched.some(res => res.meta.requireAuth)) {// 判断是否需要登录权限
 
-        if (localStorage.getItem('fbook_username')) {// 判断是否登录
+        if ($storage.get('isLogin')) {// 判断是否登录
             next()
         } else {
             // 没登录则跳转到登录界面
@@ -158,7 +158,7 @@ ajax.interceptors.response.use(
 
     response => {
         if (response.data.statusCode == 401) {
-            localStorage.removeItem('fbook_username');
+            $storage.remove('isLogin');
             $router.forward({
                 path: '/login',
                 query: {redirect: $router.currentRoute.fullPath}
@@ -330,7 +330,7 @@ Math.easeInOutQuad = function (t, b, c, d) {
 };
 
 //保存配置
-Vue.prototype.saveReadSetting = function (bookReadSetting) {
+Vue.prototype.saveReadSetting = function (bookReadSetting, callback) {
     let _this = this;
     _this.ajax({
         method: 'post',
@@ -340,7 +340,9 @@ Vue.prototype.saveReadSetting = function (bookReadSetting) {
     }).then(function (response) {
         switch (response.data.statusCode) {
             case 200:
-
+                if (callback) {
+                    callback();
+                }
                 break;
             case 300:
 

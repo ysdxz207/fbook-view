@@ -40,10 +40,7 @@
                     .then(function (response) {
                         switch (response.data.statusCode) {
                             case 200:
-                                localStorage.setItem('fbook_username',
-                                    response.data.data.loginname);
-                                localStorage.setItem('fbook_nickname',
-                                    response.data.data.nickname);
+                                $storage.set('isLogin', true)
                                 $router.forward({path: '/'})
                                 break;
                             default:
