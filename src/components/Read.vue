@@ -133,6 +133,11 @@
                 _this.bus.$emit('chapterList', chapterInfo.bookChapters);
                 //滚动到顶部
                 _this.bus.$emit('readScrollTop');
+                //关闭目录
+                _this.bus.$emit('hide', {
+                    hideMenu: true,
+                    hideChapterList: true
+                });
                 //拆分页面
                 _this.$emit('assemblePages', chapterInfo.chapter);
                 //预加载下一章
@@ -164,12 +169,6 @@
 
 //                    chapterInfo.chapter.content = '';
                     _this.loadReadContentAndSetting(chapterInfo);
-                    //关闭目录
-                    _this.bus.$emit('hide', {
-                        hideMenu: true,
-                        hideChapterList: true
-                    });
-
                 });
             },
             toggleMenu() {

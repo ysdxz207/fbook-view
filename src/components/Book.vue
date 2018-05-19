@@ -19,12 +19,12 @@
                         | <span class="book-detail-category" v-text="book.bookInfo.category"></span>
                     </p>
                     <h3 class="book-detail-item book-detail-updated">更新：{{book.bookInfo.updated}}</h3>
-                    <h5 class="book-detail-item book-detail-new">最新章：{{book.lastUpdateChapter}}</h5>
+                    <h5 class="book-detail-item book-detail-new">最新章：{{book.bookInfo.lastUpdateChapter}}</h5>
                 </div>
             </div>
             <div class="padding row">
                 <div class="col">
-                    <h4 class="text-left book-detail-ratio">读者留存率：{{book.bookInfo.retentionRatio ? book.bookInfo.retentionRatio : 0}}%</h4>
+                    <h4 class="text-left book-detail-ratio">读者留存率：{{book.bookInfo.retentionRatio ? book.bookInfo.retentionRatio + '%' : '未知'}}</h4>
                 </div>
             </div>
             <div class="padding row book-detail-btn-group">

@@ -13,7 +13,7 @@
           <div class="col search-book-items">
             <p class="search-book-name">{{book.name}}|{{book.bookInfo.category}}</p>
             <h3 class="search-book-author">作者：{{book.author}}</h3>
-            <h5 class="search-book-ratio">读者留存率：{{book.bookInfo.retentionRatio ? book.bookInfo.retentionRatio : 0}}%</h5>
+            <h5 class="search-book-ratio">读者留存率：{{book.bookInfo.retentionRatio > 0 ? book.bookInfo.retentionRatio + '%' : '未知'}}</h5>
           </div>
         </item>
         </router-link>
