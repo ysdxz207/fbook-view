@@ -31,7 +31,6 @@
             register() {
                 let _this = this;
 
-                console.log(_this.user.password ,_this.user.repassword)
                 //校验密码
                 if (_this.user.password != _this.user.repassword) {
                     $toast.show('两次密码不相同');

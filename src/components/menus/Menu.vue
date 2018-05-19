@@ -195,7 +195,6 @@
             },
             feedBackAndSaveReadSetting() {
                 this.bus.$emit('readConfigFeedback', this.bookReadSetting);
-                console.log('触发')
                 this.saveReadSetting(this.bookReadSetting);
             }
 
@@ -242,7 +241,7 @@
         z-index: 1;
     }
 
-    .icon {
+    .menu-bar .icon {
         color: #DDDDDD;
     }
 

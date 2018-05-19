@@ -158,6 +158,7 @@
                 _this.getChapterInfo({
                     bookId: _this.bookData.book.id,
                     lastReadingChapterNum: _this.bookData.bookRead.lastReadingChapterNum,
+                    lastChapterNum: _this.bookData.bookChapters.length,
                     direction: direction,
                     preLoad: false
                 }, function(chapterInfo) {
@@ -167,7 +168,6 @@
                     //加载配置信息
                     _this.bus.$emit('readConfig', chapterInfo.bookReadSetting);
 
-//                    chapterInfo.chapter.content = '';
                     _this.loadReadContentAndSetting(chapterInfo);
                 });
             },
