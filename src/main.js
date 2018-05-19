@@ -130,7 +130,7 @@ Vue.prototype.ajax = ajax;
 $router.beforeEach((to, from, next) => {
     if (to.matched.some(res => res.meta.requireAuth)) {// 判断是否需要登录权限
 
-        if ($storage.get('isLogin')) {// 判断是否登录
+        if (localStorage.getItem('isLogin')) {// 判断是否登录
             next()
         } else {
             // 没登录则跳转到登录界面
@@ -158,7 +158,7 @@ ajax.interceptors.response.use(
 
     response => {
         if (response.data.statusCode == 401) {
-            $storage.remove('isLogin');
+            localStorage.removeItem('isLogin');
             $router.forward({
                 path: '/login',
                 query: {redirect: $router.currentRoute.fullPath}

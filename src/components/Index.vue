@@ -45,7 +45,7 @@
                             default:
                                 $toast.show(response.data.message)
                                 if (response.data.errorCode == 'LOGIN_WRONG_PASSWORD') {
-                                    $storage.get('isLogin');
+                                    localStorage.getItem('isLogin');
                                     $router.forward({path: '/login'});
                                 }
                         }
@@ -62,11 +62,11 @@
                 $router.forward({path: '/user'})
             },
             goSearch() {
-                if ($storage.get("search_list")) {
-                    $storage.remove("search_list");
+                if (localStorage.getItem("search_list")) {
+                    localStorage.removeItem("search_list");
                 }
-                if ($storage.get("search_keywords")) {
-                    $storage.remove("search_keywords");
+                if (localStorage.getItem("search_keywords")) {
+                    localStorage.removeItem("search_keywords");
                 }
                 $router.forward({path: '/search'});
             }

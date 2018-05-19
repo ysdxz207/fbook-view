@@ -35,8 +35,8 @@
         mounted() {
             let _this = this;
             //缓存
-            let searchList = $storage.get("search_list");
-            let keywords = $storage.get("search_keywords");
+            let searchList = localStorage.getItem("search_list");
+            let keywords = localStorage.getItem("search_keywords");
 
             if (searchList) {
                 _this.search.bookList = JSON.parse(searchList);
@@ -55,8 +55,8 @@
                         switch (response.data.statusCode) {
                             case 200:
                                 _this.search.bookList = response.data.list;
-                                $storage.set("search_list", JSON.stringify(_this.search.bookList));
-                                $storage.set("search_keywords",_this.search.keywords);
+                                localStorage.setItem("search_list", JSON.stringify(_this.search.bookList));
+                                localStorage.setItem("search_keywords",_this.search.keywords);
                                 break;
                             default:
                                 $dialog.alert({
@@ -73,8 +73,9 @@
                 });
             },
             onCancel() {
-                this.keywords = '';
+                this.search.keywords = '';
                 this.search.bookList = [];
+                document.querySelector('input[type=search]').blur();
             }
         }
     }

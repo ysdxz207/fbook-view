@@ -47,7 +47,7 @@
                     .then(function (response) {
                         switch (response.data.statusCode) {
                             case 200:
-                                $storage.set('isLogin', true)
+                                localStorage.setItem('isLogin', true)
                                 $router.forward({path: '/'})
                                 break;
                             case 300:

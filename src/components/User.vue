@@ -80,7 +80,7 @@
                         .then(function (response) {
                             switch (response.data.statusCode) {
                                 case 200:
-                                    $storage.remove('isLogin')
+                                    localStorage.removeItem('isLogin')
                                     $router.forward({path: '/login'})
                                     break;
                                 case 300:
@@ -166,8 +166,8 @@
                     okText: '确定'
                 }).then((res) => {
                     if (res) {
-                        $storage.clear();
-                        $storage.set('isLogin', true)
+                        localStorage.clear();
+                        localStorage.setItem('isLogin', 'true')
                     }
                 })
 
