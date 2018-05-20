@@ -165,7 +165,7 @@
                 }
             },
             bookSource() {
-                $router.forward({path: '/source'})
+                this.bus.$emit('menuTriggerShowModalSource')
             },
             toggleMenuChapterList() {
                 this.sidebarOptions.isShowSidebar = !this.sidebarOptions.isShowSidebar;
@@ -180,6 +180,7 @@
                     return;
                 }
                 this.menuOption.isShowMenu = !this.menuOption.isShowMenu;
+
             },
             toggleSetFontMenu() {
                 this.isShowFontSetting = !this.isShowFontSetting;

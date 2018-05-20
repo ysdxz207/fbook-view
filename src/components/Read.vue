@@ -25,6 +25,7 @@
 
 <script>
     import menu from './menus/Menu.vue';
+    import ModalSource from './modals/ModalSource.vue'
 
     export default {
         components: {
@@ -33,6 +34,17 @@
         mounted() {
             let _this = this;
             _this.loadChapter(0);
+
+            $modal.fromComponent(ModalSource, {
+                title: '切换书源',
+                theme: 'energized'
+            }).then((modal) => {
+                this.modalSource = modal;
+            });
+        },
+        destroyed() {
+            if (this.modalSource)
+                $modal.destroy(this.modalSource)
         },
         created() {
             let _this = this;
@@ -59,6 +71,15 @@
             });
             _this.$on('assemblePages', function (chapter) {
                 _this.assemblePages(chapter);
+            });
+            //菜单触发显示书源
+            _this.bus.$on('menuTriggerShowModalSource', function () {
+                _this.modalSource.show();
+            });
+            //隐藏书源并重新加载内容
+            _this.bus.$on('hideModalSource', function () {
+                _this.modalSource.hide();
+                _this.loadChapter(0);
             });
         },
         data() {
@@ -113,7 +134,8 @@
                 currentPage: 1,
                 splitPages: [],
                 pageTransition: 'pop-in',
-                wordsNum: 0
+                wordsNum: 0,
+                modalSource: undefined
             }
         },
         methods: {
@@ -169,6 +191,9 @@
                     _this.bus.$emit('readConfig', chapterInfo.bookReadSetting);
 
                     _this.loadReadContentAndSetting(chapterInfo);
+
+                    //传递参数并加载书源信息
+                    _this.bus.$emit('bookSource', _this.bookData.book);
                 });
             },
             toggleMenu() {
@@ -378,6 +403,9 @@
                 }).catch(function (error) {
                 });
                 $loading.hide();
+            },
+            showSourceList() {
+                this.modalSource.show();
             }
         }
     }

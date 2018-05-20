@@ -5,11 +5,12 @@
         menuButtonText: '<i class=\'icon ion-person\'></i>',
         onMenuButtonClick: userInfo}">
         <div class="page-content text-center">
-            <div v-for="book in books">
-                <router-link :to="{path:'/book',query: {bookId: book.id, bookIdThird: book.bookIdThird}}" class="cells-books">
-                    <img :src="book.faceUrl" class="book-img"/>
-                    <div class="book-title" :style="book.useApi ? 'color:#ff9407' : ''">{{book.name}}</div>
-                </router-link>
+            <div v-for="book in bookList" class="cells-books" @click="goBookDetail(book)">
+                <img :src="book.faceUrl" class="book-img"/>
+                <div class="book-title"
+                     :style="(book.useApi == bookReadSetting.useApi) ? 'color:#ff9407' : 'color: #ddd'">
+                    {{book.name}}
+                </div>
             </div>
 
             <div class="btn-add-book-group">
@@ -27,7 +28,8 @@
         },
         data() {
             return {
-                books: []
+                bookList: [],
+                bookReadSetting: {}
             }
         },
         methods: {
@@ -40,7 +42,9 @@
                         switch (response.data.statusCode) {
                             case 200:
                                 $loading.hide();
-                                _this.books = response.data.list;
+                                _this.bookList = response.data.data.bookList;
+                                _this.bookReadSetting = response.data.data.bookReadSetting;
+                                console.log(_this.bookReadSetting)
                                 break;
                             default:
                                 $toast.show(response.data.message)
@@ -50,11 +54,11 @@
                                 }
                         }
                     }).catch(function (error) {
-                        $loading.hide();
-                        $dialog.alert({
-                            content: '服务器异常:' + JSON.stringify(error ),
-                            okTheme: 'calm'
-                        })
+                    $loading.hide();
+                    $dialog.alert({
+                        content: '服务器异常:' + JSON.stringify(error),
+                        okTheme: 'calm'
+                    })
                 });
                 return [];
             },
@@ -69,6 +73,27 @@
                     localStorage.removeItem("search_keywords");
                 }
                 $router.forward({path: '/search'});
+            },
+            goBookDetail(book) {
+
+                let canRead = book.useApi == this.bookReadSetting.useApi;
+
+                if (!canRead) {
+                    let msg = book.useApi ? '[接口书籍]请将设置中使用接口源打开' : '[非接口书籍]请将设置中使用接口源关闭';
+                    $dialog.alert({
+                        content: msg,
+                        okTheme: 'energized'
+                    });
+                    return;
+                }
+
+
+                $router.forward({
+                    path: '/book', query: {
+                        bookId: book.id,
+                        bookIdThird: book.bookIdThird
+                    }
+                });
             }
         }
     }
@@ -88,19 +113,23 @@
         text-decoration: none;
         color: #525252;
     }
+
     .cells-books .book-img {
         height: 86px;
     }
+
     .cells-books .book-title {
         position: relative;
         bottom: 6px;
     }
+
     .btn-add-book-group {
         position: fixed;
         bottom: 50px;
         text-align: center;
         width: 100%;
     }
+
     .btn-add-book {
         margin: 0 auto;
     }

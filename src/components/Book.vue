@@ -4,11 +4,9 @@
         showBackButton: true,
         showMenuButton: true,
         menuButtonText: '<i class=\'icon ion-ios-gear\'></i>',
-        onMenuButtonClick: function() {
-            $router.forward({path:'/source'})
-        }
+        onMenuButtonClick: showSourceList
         }">
-        <div class="page-content text-center">
+        <div class="page-content text-center" v-show="isShow">
             <div class="padding row">
                 <div class="col col-33 text-left">
                     <img  class="book-detail-img":src="book.faceUrl">
@@ -51,20 +49,42 @@
     </div>
 </template>
 <script>
+
+    import ModalSource from './modals/ModalSource.vue'
     export default {
+        created() {
+            let _this = this;
+            _this.bus.$on('hideModalSource', function () {
+                _this.modalSource.hide();
+                _this.loadBookDetail();
+            });
+        },
         mounted() {
             this.loadBookDetail();
+
+            $modal.fromComponent(ModalSource, {
+                title: '切换书源',
+                theme: 'energized'
+            }).then((modal) => {
+                this.modalSource = modal;
+            })
         },
         data() {
             return {
+                isShow: false,
                 book: {
                     id: this.$route.query.bookId,
                     bookIdThird: this.$route.query.bookIdThird,
                     faceUrl: '',
                     bookInfo: {
                     }
-                }
+                },
+                modalSource: undefined
             }
+        },
+        destroyed() {
+            if (this.modalSource)
+                $modal.destroy(this.modalSource)
         },
         methods: {
             loadBookDetail() {
@@ -76,7 +96,10 @@
                         switch (response.data.statusCode) {
                             case 200:
                                 $loading.hide();
+                                _this.isShow = true;
                                 _this.book = response.data.data;
+                                //传递参数并加载书源信息
+                                _this.bus.$emit('bookSource', _this.book)
                                 break;
                             default:
                                 $loading.hide();
@@ -122,6 +145,9 @@
                 $router.forward({path: '/read', query: {
                     bookId: this.book.id
                 }});
+            },
+            showSourceList() {
+                this.modalSource.show();
             }
         }
     }

@@ -7,7 +7,6 @@ const User = () => import('./components/User.vue');
 const Search = () => import('./components/Search.vue');
 const Book = () => import('./components/Book.vue');
 const Read = () => import('./components/Read.vue');
-const Source = () => import('./components/Source.vue');
 const MenuChapterList = () => import('./components/menus/MenuChapterList.vue');
 const About = () => import('./components/About.vue');
 const Test = () => import('./components/test/Test.vue');
@@ -61,14 +60,6 @@ const routes = [
             path: '/read',
             name: Read,
             component: Read,
-            meta: {
-                requireAuth: true
-            }
-        },
-        {
-            path: '/source',
-            name: Source,
-            component: Source,
             meta: {
                 requireAuth: true
             }
