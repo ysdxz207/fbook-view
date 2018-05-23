@@ -8,7 +8,7 @@
         <router-link :to="{path:'/book',query: {bookId: book.id, bookIdThird: book.bookIdThird}}" class="link">
         <item class="item-icon-left row search-book-list-item">
           <div class="col col-25">
-            <img  class="search-book-img":src="book.faceUrl">
+            <img  class="search-book-img":src="book.faceUrl ? book.faceUrl : '/static/images/face_pic.png'">
           </div>
           <div class="col search-book-items">
             <p class="search-book-name">{{book.name}}|{{book.bookInfo.category}}</p>
