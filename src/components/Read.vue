@@ -327,6 +327,7 @@
             },
             assemblePages(chapter) {
                 let _this = this;
+                $loading.show('处理分页中...');
                 //清空缓存
                 localStorage.removeItem("fbook_next_chapter");
                 _this.splitPages = [];
@@ -364,6 +365,7 @@
                     _this.splitPages.push({index: _this.splitPages.length + 1, content: page.innerText.replace(/\n/g, '<br/>')});
                 }
 
+                $loading.hide();
             },
             preFetchChapter() {
                 let _this = this;
