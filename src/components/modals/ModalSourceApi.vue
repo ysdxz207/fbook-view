@@ -21,7 +21,7 @@
         },
         created() {
             let _this = this;
-            _this.bus.$on('bookSource', function (book) {
+            _this.bus.$on('bookSourceApi', function (book) {
                 _this.book = book;
                 _this.loadBookSources();
             })
@@ -34,6 +34,11 @@
                 if (_this.list.length > 0) {
                     return;
                 }
+                //只加载和切换接口书源
+                if (!_this.book.useApi) {
+                    return;
+                }
+
                 _this.ajax.post('/source', {bookIdThird: this.book.bookIdThird})
                     .then(function (response) {
                         switch (response.data.statusCode) {
@@ -58,7 +63,7 @@
                 let _this = this;
                 _this.ajax.post('/source/change', {
                     bookIdThird: _this.book.bookIdThird,
-                    sourceId: source.id,
+                    sourceId: source.source,
                     bookId: _this.book.id
                 })
                     .then(function (response) {

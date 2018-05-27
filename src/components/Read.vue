@@ -25,7 +25,7 @@
 
 <script>
     import menu from './menus/Menu.vue';
-    import ModalSource from './modals/ModalSource.vue'
+    import ModalSourceApi from './modals/ModalSourceApi.vue'
 
     export default {
         components: {
@@ -35,7 +35,7 @@
             let _this = this;
             _this.loadChapter(0);
 
-            $modal.fromComponent(ModalSource, {
+            $modal.fromComponent(ModalSourceApi, {
                 title: '切换书源',
                 theme: 'energized'
             }).then((modal) => {
@@ -74,7 +74,7 @@
             });
             //菜单触发显示书源
             _this.bus.$on('menuTriggerShowModalSource', function () {
-                _this.modalSource.show();
+                _this.showSourceList();
             });
             //隐藏书源并重新加载内容
             _this.bus.$on('hideModalSource', function () {
@@ -193,7 +193,7 @@
                     _this.loadReadContentAndSetting(chapterInfo);
 
                     //传递参数并加载书源信息
-                    _this.bus.$emit('bookSource', _this.bookData.book);
+                    _this.bus.$emit('bookSourceApi', _this.bookData.book);
                 });
             },
             toggleMenu() {
@@ -407,7 +407,11 @@
                 $loading.hide();
             },
             showSourceList() {
-                this.modalSource.show();
+                if (this.bookData.book.useApi) {
+                    this.modalSource.show();
+                } else {
+                    $toast.show('非接口书籍请到设置中切换书源');
+                }
             }
         }
     }

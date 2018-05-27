@@ -44,7 +44,6 @@
                                 $loading.hide();
                                 _this.bookList = response.data.data.bookList;
                                 _this.bookReadSetting = response.data.data.bookReadSetting;
-                                console.log(_this.bookReadSetting)
                                 break;
                             default:
                                 $toast.show(response.data.message)

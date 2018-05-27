@@ -50,7 +50,7 @@
 </template>
 <script>
 
-    import ModalSource from './modals/ModalSource.vue'
+    import ModalSourceApi from './modals/ModalSourceApi.vue'
     export default {
         created() {
             let _this = this;
@@ -60,13 +60,14 @@
             });
         },
         mounted() {
-            this.loadBookDetail();
+            let _this = this;
+            _this.loadBookDetail();
 
-            $modal.fromComponent(ModalSource, {
+            $modal.fromComponent(ModalSourceApi, {
                 title: '切换书源',
                 theme: 'energized'
             }).then((modal) => {
-                this.modalSource = modal;
+                _this.modalSource = modal;
             })
         },
         data() {
@@ -99,7 +100,7 @@
                                 _this.isShow = true;
                                 _this.book = response.data.data;
                                 //传递参数并加载书源信息
-                                _this.bus.$emit('bookSource', _this.book)
+                                _this.bus.$emit('bookSourceApi', _this.book)
                                 break;
                             default:
                                 $loading.hide();
@@ -147,7 +148,11 @@
                 }});
             },
             showSourceList() {
-                this.modalSource.show();
+                if (this.book.useApi) {
+                    this.modalSource.show();
+                } else {
+                    $toast.show('非接口书籍请到设置中切换书源');
+                }
             }
         }
     }

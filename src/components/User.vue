@@ -8,6 +8,10 @@
 
             <div class="user-setting-group">
                 <von-toggle :text="useApiText" v-model="bookReadSetting.useApi"></von-toggle>
+                <item class="item-icon-right" @click.native="showSourceList()" v-bind:style="bookReadSetting.useApi ? 'color: #ddd': ''">
+                    书源设置
+                    <i class="icon ion-ios-arrow-right" style="color: #DDD;"></i>
+                </item>
             </div>
             <item class="item-icon-right" @click.native="cleanStorage()">
                 清理缓存
@@ -19,6 +23,8 @@
     </div>
 </template>
 <script>
+    import ModalSourcePick from './modals/ModalSourcePick.vue'
+
     export default {
 
         data() {
@@ -32,6 +38,13 @@
         },
         mounted() {
             this.loadUserAndSetting();
+
+            $modal.fromComponent(ModalSourcePick, {
+                title: '设置书源',
+                theme: 'calm'
+            }).then((modal) => {
+                this.modalSource = modal;
+            });
         },
         methods: {
             loadUserAndSetting() {
@@ -40,6 +53,7 @@
                     .then(function (response) {
                         switch (response.data.statusCode) {
                             case 200:
+                                let bookSourceListPick = response.data.data.bookSourceListPick;
                                 _this.bookReadSetting = response.data.data.bookReadSetting;
                                 _this.user = response.data.data.user;
                                 //首次加载不触发保存是否使用接口
@@ -47,8 +61,17 @@
                                     deep: true,
                                     handler: function () {
                                         _this.saveReadSetting(_this.bookReadSetting);
+                                        //修改是否使用接口设置后重新加载书源设置列表
+                                        _this.bus.$emit('bookSourcePick',_this.bookReadSetting,
+                                            bookSourceListPick);
+
                                     }
-                                })
+                                });
+
+                                _this.bus.$emit('bookSourcePick',_this.bookReadSetting,
+                                    bookSourceListPick);
+
+
                                 break;
                             case 300:
                             default:
@@ -171,6 +194,12 @@
                     }
                 })
 
+            },
+            showSourceList() {
+                let _this = this;
+                if (!_this.bookReadSetting.useApi) {
+                    this.modalSource.show();
+                }
             }
         }
     }
