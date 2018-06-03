@@ -71,7 +71,7 @@ if (process.env.NODE_ENV === 'production') {
             }
         }),
         new SshWebpackPlugin({
-            host: 'puyixiaowo.win',
+            host: '47.52.101.64',
             port: '22',
             username: 'root',
             privateKey: require('fs').readFileSync('E:/huangfeihong/id_rsa_2048_hupubao'),

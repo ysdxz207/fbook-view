@@ -92,7 +92,7 @@ Vue.use(Vonic.app, {
 
 const env = process.env.NODE_ENV;
 
-const baseURL = env == 'production' ? 'http://api.book.puyixiaowo.win' : 'http://localhost:8010';
+const baseURL = env == 'production' ? 'http://book-api.puyixiaowo.win' : 'http://localhost:8010';
 
 
 
